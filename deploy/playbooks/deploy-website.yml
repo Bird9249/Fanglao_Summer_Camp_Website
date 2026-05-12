@@ -1,0 +1,66 @@
+- name: Deploy Website server only
+  hosts: prod
+  become: true
+  vars_files:
+    - ../group_vars/prod.yml
+  vars:
+    release_id: "{{ ansible_date_time.epoch }}"
+  pre_tasks:
+    - name: Ensure base dirs exist (server-side)
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+      loop:
+        - "{{ server_releases }}"
+  tasks:
+    - name: Build production bundle locally (vite + Nitro → .output)
+      delegate_to: localhost
+      run_once: true
+      become: false
+      command: bun run build
+      args:
+        chdir: "{{ local_repo }}"
+      changed_when: true
+
+    - name: Assert server dist exists
+      delegate_to: localhost
+      run_once: true
+      become: false
+      stat: { path: "{{ local_server_dist }}" }
+      register: server_dist
+
+    - name: Fail if server dist missing
+      delegate_to: localhost
+      run_once: true
+      become: false
+      fail:
+        msg: ".output missing — run `bun run build` at repo root and ensure Nitro emits .output/"
+      when: not server_dist.stat.exists
+
+    - name: Check if index.mjs exists in server dist
+      delegate_to: localhost
+      run_once: true
+      become: false
+      stat: { path: "{{ local_server_dist }}/server/index.mjs" }
+      register: index_mjs
+
+    - name: Fail if index.mjs missing
+      delegate_to: localhost
+      run_once: true
+      become: false
+      fail:
+        msg: ".output/server/index.mjs missing — build failed or wrong output directory"
+      when: not index_mjs.stat.exists
+
+    - name: Include deploy only website tasks
+      include_tasks: ../roles/app/tasks/release_website.yml
+
+    - name: Prune old server releases
+      shell: |
+        cd {{ server_releases }}
+        ls -1t | tail -n +{{ (keep_releases + 1) | int }} | xargs -r rm -rf
+      changed_when: false
+      failed_when: false

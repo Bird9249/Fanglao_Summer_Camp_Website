@@ -1,0 +1,103 @@
+- name: Initial server setup
+  hosts: prod
+  become: true
+  vars_files:
+    - ../group_vars/prod.yml
+  vars:
+    ansible_roles_path: ../roles
+  tasks:
+    - name: Create systemd service files
+      template:
+        src: "[[app_name]].service.j2"
+        dest: "/etc/systemd/system/{{ app_name }}.service"
+        owner: root
+        group: root
+        mode: "0644"
+      notify:
+        - daemon-reload
+
+    - name: Ensure nginx is installed and running
+      systemd:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Create temporary HTTP-only configs for SSL challenge
+      template:
+        src: "nginx-site-http.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ app_name }}"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Enable temporary HTTP configs
+      file:
+        src: "/etc/nginx/sites-available/{{ app_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ app_name }}"
+        state: link
+
+    - name: Start nginx for SSL challenge
+      systemd:
+        name: nginx
+        state: started
+
+    - name: Obtain SSL certificate for Website domain
+      command: >
+        certbot certonly --nginx
+        --non-interactive --agree-tos
+        --email {{ ssl_email }}
+        --domains {{ domain }}
+        --expand
+      register: website_ssl_result
+      failed_when: website_ssl_result.rc not in [0, 1]  # 1 = already exists
+
+    - name: Remove temporary HTTP configs
+      file:
+        path: "/etc/nginx/sites-enabled/{{ app_name }}"
+        state: absent
+
+    - name: Create SSL-enabled nginx configs
+      template:
+        src: "nginx-site.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ app_name }}"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Enable SSL nginx configs
+      file:
+        src: "/etc/nginx/sites-available/{{ app_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ app_name }}"
+        state: link
+
+    - name: Test nginx configuration
+      command: nginx -t
+      register: nginx_test
+      changed_when: false
+
+    - name: Fail if nginx config is invalid
+      fail:
+        msg: "Nginx configuration test failed: {{ nginx_test.stderr }}"
+      when: nginx_test.rc != 0
+
+    - name: Reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
+
+    - name: Setup SSL auto-renewal cron job
+      cron:
+        name: "SSL Certificate Auto-Renewal"
+        minute: "0"
+        hour: "2"
+        job: "/usr/bin/certbot renew --quiet --nginx --post-hook 'systemctl reload nginx'"
+        user: root
+
+  handlers:
+    - name: daemon-reload
+      command: systemctl daemon-reload
+
+    - name: reload nginx
+      systemd:
+        name: nginx
+        state: reloaded

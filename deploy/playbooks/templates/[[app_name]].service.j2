@@ -1,0 +1,17 @@
+[Unit]
+Description={{ app_name }} Website (TanStack Start + Nitro)
+After=network.target
+
+[Service]
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ server_current }}
+EnvironmentFile=/etc/{{ app_name }}.env
+ExecStart=/root/.bun/bin/bun .output/server/index.mjs
+Environment=NODE_ENV=production
+Environment=PORT={{ port }}
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

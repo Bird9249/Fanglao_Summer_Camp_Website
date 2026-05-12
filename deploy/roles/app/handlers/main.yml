@@ -1,0 +1,16 @@
+- name: daemon-reload
+  command: systemctl daemon-reload
+  become: true
+
+- name: restart api
+  systemd:
+    name: "{{ service }}"
+    state: restarted
+    enabled: true
+  become: true
+
+- name: reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  become: true

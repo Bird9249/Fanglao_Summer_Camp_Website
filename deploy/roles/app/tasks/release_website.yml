@@ -1,0 +1,58 @@
+- name: Create server release dir
+  file:
+    path: "{{ server_releases }}/{{ release_id }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+
+- name: Create server dist dir
+  file:
+    path: "{{ server_releases }}/{{ release_id }}/.output"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+
+- name: Rsync server dist
+  synchronize:
+    src: "{{ local_server_dist }}/"
+    dest: "{{ server_releases }}/{{ release_id }}/.output/"
+    rsync_opts: ["--delete", "--mkpath"]
+  delegate_to: localhost
+  become: false
+
+- name: Point server current -> this release
+  file:
+    src: "{{ server_releases }}/{{ release_id }}"
+    dest: "{{ server_current }}"
+    state: link
+    force: true
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: Restart Website
+  systemd:
+    name: "{{ service }}"
+    state: restarted
+    enabled: true
+
+- name: Wait for Website service to start
+  wait_for:
+    port: "{{ port }}"
+    host: "127.0.0.1"
+    delay: 5
+    timeout: 30
+
+- name: Check Website service status
+  systemd:
+    name: "{{ service }}"
+  register: website_status
+
+- name: Fail if Website service is not running
+  fail:
+    msg: "Website service failed to start"
+  when: website_status.status.ActiveState != "active"
