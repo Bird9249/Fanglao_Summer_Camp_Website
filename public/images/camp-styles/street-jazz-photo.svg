@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320">
+  <defs>
+    <linearGradient id="jazzBg" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0a828"/>
+      <stop offset="45%" stop-color="#7a3cb8"/>
+      <stop offset="100%" stop-color="#1e0f38"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="320" fill="url(#jazzBg)"/>
+  <ellipse cx="108" cy="44" rx="22" ry="24" fill="#ffd98a"/>
+  <path d="M82 80 Q108 64 134 80 L138 152 Q108 132 78 152 Z" fill="#f0be38"/>
+  <path d="M56 118 L24 170 L44 182 L72 132 Z" fill="#e8a820"/>
+  <path d="M150 100 L178 130 L160 148 L136 118 Z" fill="#e8a820"/>
+  <path d="M86 152 L52 280 L80 288 L100 176 Z" fill="#d49018"/>
+  <path d="M130 152 L168 250 L140 260 L116 176 Z" fill="#d49018"/>
+</svg>

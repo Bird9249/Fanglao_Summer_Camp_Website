@@ -9,7 +9,7 @@ import * as React from 'react'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
-import { seo } from '~/utils/seo'
+import { siteSeoConfig } from '~/lib/site-seo'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -21,10 +21,8 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      ...seo({
-        title: 'PARTZYNC Marketplace',
-        description: 'Marketplace application',
-      }),
+      { name: 'theme-color', content: siteSeoConfig.themeColor },
+      { name: 'application-name', content: siteSeoConfig.siteName },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },

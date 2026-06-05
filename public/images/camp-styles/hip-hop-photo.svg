@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320">
+  <defs>
+    <linearGradient id="hiphopBg" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#28124a"/>
+      <stop offset="60%" stop-color="#c87820"/>
+      <stop offset="100%" stop-color="#f0c040"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="320" fill="url(#hiphopBg)"/>
+  <ellipse cx="88" cy="200" rx="20" ry="22" fill="#ffe090"/>
+  <path d="M64 188 Q88 160 112 188 L118 230 Q88 214 58 230 Z" fill="#f0b830"/>
+  <path d="M40 210 L18 250 L38 258 L56 220 Z" fill="#e8a020"/>
+  <path d="M136 196 L162 240 L142 250 L120 214 Z" fill="#e8a020"/>
+  <path d="M70 230 L48 300 L72 306 L84 250 Z" fill="#d89018"/>
+  <path d="M106 228 L132 290 L108 298 L96 248 Z" fill="#d89018"/>
+</svg>

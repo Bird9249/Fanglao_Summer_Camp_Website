@@ -1,6 +1,8 @@
 {
-  "name": "PARTZYNC Marketplace",
-  "short_name": "Marketplace",
+  "name": "Fanglao Summer Dance Camp & Jam 2026",
+  "short_name": "Fanglao",
+  "description": "ຮຽນເຕັ້ນພັກແລ້ງ ຮຽນວັດທະນະທຳ ສະແດງອອກ — Fanglao Studio, Vientiane",
+  "lang": "lo",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +15,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#2a1f45",
+  "background_color": "#2a1f45",
+  "display": "standalone",
+  "start_url": "/"
 }

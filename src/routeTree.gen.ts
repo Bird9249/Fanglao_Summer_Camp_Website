@@ -9,19 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SiteRouteImport } from './routes/_site'
+import { Route as SiteIndexRouteImport } from './routes/_site/index'
 import { Route as ApiUploadPresignRouteImport } from './routes/api/upload/presign'
 import { Route as ApiFilesSplatRouteImport } from './routes/api/files/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as SiteRegisterJamRouteImport } from './routes/_site/register/jam'
+import { Route as SiteRegisterCampRouteImport } from './routes/_site/register/camp'
 import { Route as ApiUploadMultipartPresignPartsRouteImport } from './routes/api/upload/multipart/presign-parts'
 import { Route as ApiUploadMultipartInitRouteImport } from './routes/api/upload/multipart/init'
 import { Route as ApiUploadMultipartCompleteRouteImport } from './routes/api/upload/multipart/complete'
 import { Route as ApiUploadMultipartAbortRouteImport } from './routes/api/upload/multipart/abort'
 
-const IndexRoute = IndexRouteImport.update({
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SiteRoute = SiteRouteImport.update({
+  id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => SiteRoute,
 } as any)
 const ApiUploadPresignRoute = ApiUploadPresignRouteImport.update({
   id: '/api/upload/presign',
@@ -37,6 +56,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SiteRegisterJamRoute = SiteRegisterJamRouteImport.update({
+  id: '/register/jam',
+  path: '/register/jam',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteRegisterCampRoute = SiteRegisterCampRouteImport.update({
+  id: '/register/camp',
+  path: '/register/camp',
+  getParentRoute: () => SiteRoute,
 } as any)
 const ApiUploadMultipartPresignPartsRoute =
   ApiUploadMultipartPresignPartsRouteImport.update({
@@ -62,7 +91,11 @@ const ApiUploadMultipartAbortRoute = ApiUploadMultipartAbortRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof SiteIndexRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/register/camp': typeof SiteRegisterCampRoute
+  '/register/jam': typeof SiteRegisterJamRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/files/$': typeof ApiFilesSplatRoute
   '/api/upload/presign': typeof ApiUploadPresignRoute
@@ -72,7 +105,11 @@ export interface FileRoutesByFullPath {
   '/api/upload/multipart/presign-parts': typeof ApiUploadMultipartPresignPartsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/': typeof SiteIndexRoute
+  '/register/camp': typeof SiteRegisterCampRoute
+  '/register/jam': typeof SiteRegisterJamRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/files/$': typeof ApiFilesSplatRoute
   '/api/upload/presign': typeof ApiUploadPresignRoute
@@ -83,7 +120,12 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_site': typeof SiteRouteWithChildren
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_site/': typeof SiteIndexRoute
+  '/_site/register/camp': typeof SiteRegisterCampRoute
+  '/_site/register/jam': typeof SiteRegisterJamRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/files/$': typeof ApiFilesSplatRoute
   '/api/upload/presign': typeof ApiUploadPresignRoute
@@ -96,6 +138,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/robots.txt'
+    | '/sitemap.xml'
+    | '/register/camp'
+    | '/register/jam'
     | '/api/auth/$'
     | '/api/files/$'
     | '/api/upload/presign'
@@ -105,7 +151,11 @@ export interface FileRouteTypes {
     | '/api/upload/multipart/presign-parts'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/'
+    | '/register/camp'
+    | '/register/jam'
     | '/api/auth/$'
     | '/api/files/$'
     | '/api/upload/presign'
@@ -115,7 +165,12 @@ export interface FileRouteTypes {
     | '/api/upload/multipart/presign-parts'
   id:
     | '__root__'
-    | '/'
+    | '/_site'
+    | '/robots.txt'
+    | '/sitemap.xml'
+    | '/_site/'
+    | '/_site/register/camp'
+    | '/_site/register/jam'
     | '/api/auth/$'
     | '/api/files/$'
     | '/api/upload/presign'
@@ -126,7 +181,9 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  SiteRoute: typeof SiteRouteWithChildren
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiFilesSplatRoute: typeof ApiFilesSplatRoute
   ApiUploadPresignRoute: typeof ApiUploadPresignRoute
@@ -138,12 +195,33 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_site': {
+      id: '/_site'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_site/': {
+      id: '/_site/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof SiteIndexRouteImport
+      parentRoute: typeof SiteRoute
     }
     '/api/upload/presign': {
       id: '/api/upload/presign'
@@ -165,6 +243,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_site/register/jam': {
+      id: '/_site/register/jam'
+      path: '/register/jam'
+      fullPath: '/register/jam'
+      preLoaderRoute: typeof SiteRegisterJamRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/register/camp': {
+      id: '/_site/register/camp'
+      path: '/register/camp'
+      fullPath: '/register/camp'
+      preLoaderRoute: typeof SiteRegisterCampRouteImport
+      parentRoute: typeof SiteRoute
     }
     '/api/upload/multipart/presign-parts': {
       id: '/api/upload/multipart/presign-parts'
@@ -197,8 +289,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SiteRouteChildren {
+  SiteIndexRoute: typeof SiteIndexRoute
+  SiteRegisterCampRoute: typeof SiteRegisterCampRoute
+  SiteRegisterJamRoute: typeof SiteRegisterJamRoute
+}
+
+const SiteRouteChildren: SiteRouteChildren = {
+  SiteIndexRoute: SiteIndexRoute,
+  SiteRegisterCampRoute: SiteRegisterCampRoute,
+  SiteRegisterJamRoute: SiteRegisterJamRoute,
+}
+
+const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  SiteRoute: SiteRouteWithChildren,
+  RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiFilesSplatRoute: ApiFilesSplatRoute,
   ApiUploadPresignRoute: ApiUploadPresignRoute,

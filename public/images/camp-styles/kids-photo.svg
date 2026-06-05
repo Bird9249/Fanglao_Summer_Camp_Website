@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320">
+  <defs>
+    <linearGradient id="kidsBg" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2a1548"/>
+      <stop offset="55%" stop-color="#6b3fa0"/>
+      <stop offset="100%" stop-color="#e8a830"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="320" fill="url(#kidsBg)"/>
+  <ellipse cx="100" cy="42" rx="22" ry="24" fill="#f5d67a"/>
+  <path d="M72 78 Q100 62 128 78 L140 150 Q100 130 60 150 Z" fill="#f0c040"/>
+  <path d="M48 120 L30 210 L52 214 L68 150 Z" fill="#e8b020"/>
+  <path d="M152 120 L170 200 L148 206 L132 150 Z" fill="#e8b020"/>
+  <path d="M78 150 L62 290 L88 294 L98 180 Z" fill="#d49818"/>
+  <path d="M122 150 L138 280 L112 286 L102 180 Z" fill="#d49818"/>
+</svg>
