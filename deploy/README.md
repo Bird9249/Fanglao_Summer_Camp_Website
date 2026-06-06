@@ -26,7 +26,7 @@
 
 - `local_repo` — path ราก `Summer_Camp_2026` บนเครื่องคุณ
 - `domain`, `ssl_email` — สำหรับ Let's Encrypt
-- `port` — **3001** (แยกจาก Admin ที่ 3000 บนเซิร์ฟเวอร์เดียวกัน)
+- `port` — **3003** (แยกจาก Admin ที่ 3000 บนเซิร์ฟเวอร์เดียวกัน)
 - `app_name` / `service` / `app_root` — ค่าเริ่มต้น `summer-camp-2026` + `/opt/summer-camp-2026`
 
 ### 2) ไฟล์ environment บนเซิร์ฟเวอร์
@@ -96,5 +96,5 @@ curl -fsS https://summer2026.fanglaostudio.com/
 ## หมายเหตุ
 
 - Deploy เป็นแบบ symlink ใหม่แล้วสลับ `current` — release เก่าถูกตัดเมื่อเกิน `keep_releases`
-- `port` ใน `prod.yml` ต้องตรงกับ `PORT` ใน `/etc/summer-camp-2026.env` (ค่าเริ่มต้น **3001**)
+- `port` ใน `prod.yml` ต้องตรงกับ `PORT` ใน `/etc/summer-camp-2026.env` (ค่าเริ่มต้น **3003**)
 - Camp registration เรียก Admin API — ตั้ง `CAMP_API_KEY` ให้ตรงกับ `CAMP_PUBLIC_API_KEY` ใน Fanglao Admin

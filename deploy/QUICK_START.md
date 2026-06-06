@@ -14,7 +14,7 @@ your.server.ip ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_ed25519
 - `local_repo`: `/home/bird/Desktop/fanglao/Summer_Camp_2026`
 - `domain`: `summer2026.fanglaostudio.com`
 - `ssl_email`: อีเมลสำหรับ Let's Encrypt
-- `port`: **3001** (Admin ใช้ 3000 บนเซิร์ฟเวอร์เดียวกัน)
+- `port`: **3003** (Admin ใช้ 3000 บนเซิร์ฟเวอร์เดียวกัน)
 
 ## 2. เซิร์ฟเวอร์
 

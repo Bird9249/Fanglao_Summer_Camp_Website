@@ -7,7 +7,7 @@ export const siteSeoConfig = {
     'Fanglao, dance camp, hip hop, breaking, k-pop, street dance, Laos, Vientiane, summer camp, battle',
   locale: 'lo_LA',
   themeColor: '#2a1f45',
-  defaultOgImagePath: '/images/og-cover.png',
+  defaultOgImagePath: '/summer-camp-logo.png',
 } as const
 
 export const publicSiteRoutes = [

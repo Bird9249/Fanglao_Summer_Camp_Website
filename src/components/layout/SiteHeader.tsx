@@ -6,7 +6,12 @@ import { scrollToSection } from '~/lib/scroll-to-section'
 import { cn } from '~/lib/utils'
 import { FanglaoLogo } from '~/components/brand/FanglaoLogo'
 import { NavSectionLink } from './NavSectionLink'
-import { mainNav, registerNav } from './nav'
+import { mainNav } from './nav'
+
+const navLinkClass =
+  'site-header-nav-link text-xs font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground'
+
+const navLinkActiveClass = 'site-header-nav-link--active'
 
 export function SiteHeader() {
   const navigate = useNavigate()
@@ -32,11 +37,16 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4">
+    <header className="site-header sticky top-0 z-40 border-b backdrop-blur-lg">
+      <div
+        aria-hidden
+        className="site-header-glow pointer-events-none absolute inset-0"
+      />
+
+      <div className="relative mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4 md:h-[4.25rem]">
         <a
           href="/#hero-section"
-          className="flex shrink-0 items-center"
+          className="flex shrink-0 items-center transition-opacity hover:opacity-90"
           onClick={goHome}
           aria-label="Fanglao Studio — ໜ້າຫຼັກ"
         >
@@ -45,24 +55,33 @@ export function SiteHeader() {
 
         <nav
           aria-label="Main navigation"
-          className="ml-auto hidden items-center gap-6 lg:flex"
+          className="ml-auto hidden items-center gap-7 lg:flex"
         >
           {mainNav.map((item) => (
             <NavSectionLink
               key={item.sectionId}
               sectionId={item.sectionId}
               label={item.label}
-              className="text-sm font-semibold uppercase tracking-wide text-muted-foreground transition-colors hover:text-foreground"
-              activeClassName="text-primary"
+              className={navLinkClass}
+              activeClassName={navLinkActiveClass}
             />
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Button variant="outline" size="sm" asChild>
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <Button
+            variant="outline"
+            size="sm"
+            className="site-header-cta--jam font-heading text-xs font-bold uppercase tracking-wider"
+            asChild
+          >
             <Link to="/register/jam">Jam</Link>
           </Button>
-          <Button size="sm" className="shadow-lg shadow-primary/25" asChild>
+          <Button
+            size="sm"
+            className="site-header-cta--camp font-heading text-xs font-bold uppercase tracking-wider"
+            asChild
+          >
             <Link to="/register/camp">ລົງທະບຽນ</Link>
           </Button>
         </div>
@@ -71,7 +90,7 @@ export function SiteHeader() {
           type="button"
           variant="ghost"
           size="icon"
-          className="ml-auto lg:hidden"
+          className="ml-auto text-foreground hover:bg-primary/10 hover:text-primary lg:hidden"
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? 'ປິດເມນູ' : 'ເປີດເມນູ'}
           onClick={() => setMobileOpen((open) => !open)}
@@ -82,7 +101,7 @@ export function SiteHeader() {
 
       <div
         className={cn(
-          'border-t border-border bg-background lg:hidden',
+          'site-header-mobile relative border-t lg:hidden',
           mobileOpen ? 'block' : 'hidden',
         )}
       >
@@ -96,18 +115,31 @@ export function SiteHeader() {
               sectionId={item.sectionId}
               label={item.label}
               onNavigate={closeMobile}
-              className="rounded-lg px-3 py-2.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeClassName="bg-muted text-primary"
+              className={cn(
+                navLinkClass,
+                'rounded-lg px-3 py-2.5 tracking-wide hover:bg-primary/8',
+              )}
+              activeClassName={cn(navLinkActiveClass, 'bg-primary/10')}
             />
           ))}
-          <div className="mt-2 flex flex-col gap-2 border-t border-border pt-4">
-            {registerNav.map((item) => (
-              <Button key={item.to} variant="outline" asChild>
-                <Link to={item.to} onClick={closeMobile}>
-                  {item.label}
-                </Link>
-              </Button>
-            ))}
+          <div className="mt-2 flex flex-col gap-2 border-t border-primary/15 pt-4">
+            <Button
+              variant="outline"
+              className="site-header-cta--jam font-heading font-bold uppercase tracking-wider"
+              asChild
+            >
+              <Link to="/register/jam" onClick={closeMobile}>
+                ລົງທະບຽນ Jam
+              </Link>
+            </Button>
+            <Button
+              className="site-header-cta--camp font-heading font-bold uppercase tracking-wider"
+              asChild
+            >
+              <Link to="/register/camp" onClick={closeMobile}>
+                ລົງທະບຽນ Camp
+              </Link>
+            </Button>
           </div>
         </nav>
       </div>
