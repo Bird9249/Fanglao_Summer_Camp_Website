@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react'
 import {
   RiBoxingLine,
   RiMic2Line,
@@ -6,6 +5,7 @@ import {
   RiSparklingLine,
   RiStarSmileLine,
 } from '@remixicon/react'
+import type { ComponentType } from 'react'
 
 export type CampStyle = {
   id: string
@@ -35,8 +35,8 @@ export const campStyles: CampStyle[] = [
       { days: 'Mon–Fri', time: '09:00 – 11:00', group: 'Kids 5–12' },
     ],
     icon: RiStarSmileLine,
-    silhouetteSrc: '/images/camp-styles/kids-silhouette.svg',
-    photoSrc: '/images/camp-styles/kids-photo.svg',
+    silhouetteSrc: '/images/camp-styles/kid.png',
+    photoSrc: '/images/camp-styles/kid.png',
     previewVideoSrc: '/videos/camp-styles/kids-preview.mp4',
     splashClass: 'style-splash-kids',
   },
@@ -52,8 +52,8 @@ export const campStyles: CampStyle[] = [
       { days: 'Mon–Fri', time: '13:00 – 15:00', group: 'Teens & Adults' },
     ],
     icon: RiMusic2Line,
-    silhouetteSrc: '/images/camp-styles/kpop-silhouette.svg',
-    photoSrc: '/images/camp-styles/kpop-photo.svg',
+    silhouetteSrc: '/images/camp-styles/kpop.png',
+    photoSrc: '/images/camp-styles/kpop.png',
     previewVideoSrc: '/videos/camp-styles/kpop-preview.mp4',
     splashClass: 'style-splash-kpop',
   },
@@ -69,8 +69,8 @@ export const campStyles: CampStyle[] = [
       { days: 'Mon–Fri', time: '15:00 – 17:00', group: 'All levels' },
     ],
     icon: RiSparklingLine,
-    silhouetteSrc: '/images/camp-styles/street-jazz-silhouette.svg',
-    photoSrc: '/images/camp-styles/street-jazz-photo.svg',
+    silhouetteSrc: '/images/camp-styles/jazz.png',
+    photoSrc: '/images/camp-styles/jazz.png',
     previewVideoSrc: '/videos/camp-styles/street-jazz-preview.mp4',
     splashClass: 'style-splash-street-jazz',
   },
@@ -86,8 +86,8 @@ export const campStyles: CampStyle[] = [
       { days: 'Mon–Fri', time: '17:00 – 19:00', group: 'Teens & Adults' },
     ],
     icon: RiMic2Line,
-    silhouetteSrc: '/images/camp-styles/hip-hop-silhouette.svg',
-    photoSrc: '/images/camp-styles/hip-hop-photo.svg',
+    silhouetteSrc: '/images/camp-styles/hiphop.png',
+    photoSrc: '/images/camp-styles/hiphop.png',
     previewVideoSrc: '/videos/camp-styles/hip-hop-preview.mp4',
     splashClass: 'style-splash-hip-hop',
   },
@@ -103,9 +103,47 @@ export const campStyles: CampStyle[] = [
       { days: 'Mon–Fri', time: '19:00 – 21:00', group: 'Intermediate+' },
     ],
     icon: RiBoxingLine,
-    silhouetteSrc: '/images/camp-styles/breaking-silhouette.svg',
-    photoSrc: '/images/camp-styles/breaking-photo.svg',
+    silhouetteSrc: '/images/camp-styles/breaking.png',
+    photoSrc: '/images/camp-styles/breaking.png',
     previewVideoSrc: '/videos/camp-styles/breaking-preview.mp4',
     splashClass: 'style-splash-breaking',
   },
 ]
+
+const classNameToStyleId: Record<string, string> = {
+  'kids class': 'kids',
+  kids: 'kids',
+  'k-pop class': 'kpop',
+  'k-pop': 'kpop',
+  kpop: 'kpop',
+  'street jazz': 'street-jazz',
+  'hip-hop class': 'hip-hop',
+  'hip-hop': 'hip-hop',
+  'hip hop': 'hip-hop',
+  breaking: 'breaking',
+  'breaking class': 'breaking',
+}
+
+export function findCampStyleForClassName(name: string): CampStyle | undefined {
+  const key = name.trim().toLowerCase().replace(/\s+class$/i, '')
+  const styleId =
+    classNameToStyleId[key] ?? classNameToStyleId[name.trim().toLowerCase()]
+  if (!styleId) return undefined
+  return campStyles.find((style) => style.id === styleId)
+}
+
+export function resolveClassTypeIdFromSlug(
+  slug: string,
+  classes: Array<{ classTypeId: string; name: string }>,
+): string | undefined {
+  const style = campStyles.find((item) => item.id === slug)
+  if (!style) return undefined
+
+  const normalizedStyleName = style.name.toLowerCase().replace(/\s+class$/i, '')
+  const match = classes.find((item) => {
+    const normalized = item.name.toLowerCase().replace(/\s+class$/i, '')
+    return normalized === normalizedStyleName
+  })
+
+  return match?.classTypeId
+}

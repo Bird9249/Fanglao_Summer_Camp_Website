@@ -1,8 +1,8 @@
 import {
-  RiFlagFill,
-  RiSwordFill,
-  RiTeamFill,
-  RiTrophyFill,
+  RiFlagLine,
+  RiSwordLine,
+  RiTeamLine,
+  RiTrophyLine,
 } from '@remixicon/react'
 import type { ComponentType } from 'react'
 
@@ -20,14 +20,14 @@ export const jamQualifiers: JamCategory[] = [
     name: 'Laos Cloud Jam Qualifier',
     lao: 'Cloud Jam Qualifier',
     description: 'Open qualifier ສຳລັບ national circuit',
-    icon: RiTrophyFill,
+    icon: RiTrophyLine,
   },
   {
     id: 'badvibe',
     name: 'Laos Badvibe Qualifier',
     lao: 'Badvibe Qualifier',
     description: 'Open qualifier ສຳລັບ Badvibe national event',
-    icon: RiFlagFill,
+    icon: RiFlagLine,
   },
 ]
 
@@ -37,14 +37,14 @@ export const jamBattles: JamCategory[] = [
     name: 'Kids Battle',
     lao: 'Kids Battle',
     description: 'ເປີດໃຫ້ນັກຮຽນ camp (ເດັກນ້ອຍ) ທຸກຄົນ',
-    icon: RiSwordFill,
+    icon: RiSwordLine,
   },
   {
     id: 'Hip-Break',
     name: 'Hip-Break 2 vs 2',
     lao: 'Hip-Break 2vs2',
     description: 'ແຂ່ງຂັນແບບ 2-on-2 ຜົນປະສົມ Breaking ແລະ Hip-Hop',
-    icon: RiTeamFill,
+    icon: RiTeamLine,
   },
 ]
 

@@ -4,23 +4,21 @@ import {
   RiSparklingLine,
   RiUserLine,
 } from '@remixicon/react'
-import { campStyles } from '~/lib/camp-styles'
-import { CAMP_MAX_AGE, CAMP_MIN_AGE, type CampStyleId } from '~/lib/camp-registration'
+import { CampLogo } from '~/components/brand/CampLogo'
+import type { CampClassPublicDTO } from '~/lib/camp-registration-api'
+import { CAMP_MAX_AGE, CAMP_MIN_AGE } from '~/lib/camp-registration'
 import { siteMeta } from '~/components/layout/nav'
+
 const registerSteps = [
   { id: 'profile', label: 'ຂໍ້ມູນສ່ວນຕົວ', icon: RiUserLine },
   { id: 'classes', label: 'ເລືອກຄລາສ', icon: RiSparklingLine },
 ] as const
 
 export function CampRegisterHero({
-  preselectedClassIds = [],
+  preselectedClasses = [],
 }: {
-  preselectedClassIds?: CampStyleId[]
+  preselectedClasses?: CampClassPublicDTO[]
 }) {
-  const preselectedStyles = campStyles.filter((style) =>
-    preselectedClassIds.includes(style.id as CampStyleId),
-  )
-
   return (
     <section
       aria-labelledby="camp-register-hero-heading"
@@ -34,35 +32,28 @@ export function CampRegisterHero({
       <div className="relative mx-auto flex w-full max-w-3xl flex-col gap-6">
         <div className="rounded-2xl border border-primary/20 bg-card/80 p-5 shadow-[0_0_40px_color-mix(in_oklch,var(--primary)_8%,transparent)] backdrop-blur-sm md:p-7">
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                Summer Dance Camp 2026
+            <div className="flex flex-col items-center gap-4 text-center">
+              <h1 id="camp-register-hero-heading" className="sr-only">
+                ລົງທະບຽນ Summer Camp
+              </h1>
+              <CampLogo size="register" />
+              <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
+                ແບບຟອມສຳລັບບຸກຄົນທົ່ວໄປ · ກອກຂໍ້ມູນສ່ວນຕົວ ເລືອກຄລາສ
+                ແລະສົ່ງໃບສະໝັກໃນຂັ້ນຕອນດຽວ
               </p>
-              <div className="flex flex-col gap-2">
-                <h1
-                  id="camp-register-hero-heading"
-                  className="font-heading text-2xl font-bold uppercase tracking-tight md:text-3xl"
-                >
-                  ລົງທະບຽນ Summer Camp
-                </h1>
-                <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-                  ແບບຟອມສຳລັບບຸກຄົນທົ່ວໄປ · ກອກຂໍ້ມູນສ່ວນຕົວ ເລືອກຄລາສ
-                  ແລະສົ່ງໃບສະໝັກໃນຂັ້ນຕອນດຽວ
-                </p>
-              </div>
             </div>
 
-            {preselectedStyles.length > 0 ? (
+            {preselectedClasses.length > 0 ? (
               <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/25 bg-primary/10 px-3 py-2.5">
                 <span className="text-xs font-semibold uppercase tracking-wide text-primary">
                   ເລີ່ມຈາກຄລາສ:
                 </span>
-                {preselectedStyles.map((style) => (
+                {preselectedClasses.map((item) => (
                   <span
-                    key={style.id}
+                    key={item.classTypeId}
                     className="rounded-full border border-primary/30 bg-background/50 px-2.5 py-1 text-xs font-medium text-foreground"
                   >
-                    {style.name.replace(' Class', '')}
+                    {item.name.replace(' Class', '')}
                   </span>
                 ))}
               </div>

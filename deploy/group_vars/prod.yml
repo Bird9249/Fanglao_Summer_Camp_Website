@@ -1,27 +1,27 @@
-# ตัวอย่างการตั้งค่า — แก้ domain/ssl และ path ให้ตรงกับเซิร์ฟเวอร์จริง
-app_name: "marketplace"
+# Fanglao Summer Camp 2026 — production deploy vars
+app_name: "summer-camp-2026"
 app_user: "root"
 app_group: "root"
 
 # paths บนเซิร์ฟเวอร์
-app_root: "/opt/marketplace"
+app_root: "/opt/summer-camp-2026"
 server_releases: "{{ app_root }}/releases"
 server_current: "{{ app_root }}/current"
 
-# โฟลเดอร์ repo โลคัล (รัน ansible จากรากโปรเจกต์นี้ — เปลี่ยน path ถ้าโคลนที่อื่น)
-local_repo: "/home/bird/Desktop/apartment/Plateform"
+# โฟลเดอร์ repo โลคัล (รัน ansible จาก deploy/)
+local_repo: "/home/bird/Desktop/fanglao/Summer_Camp_2026"
 # ผลจาก `bun run build` (TanStack Start + Nitro preset bun)
 local_server_dist: "{{ local_repo }}/.output"
 
-# systemd & พอร์ตที่แอป bind (ควรตรงกับ PORT ใน env ถ้าใช้)
-service: "marketplace"
-port: 3000
+# systemd & พอร์ต upstream (แยกจาก Fanglao Admin ที่ใช้ 3000)
+service: "summer-camp-2026"
+port: 3001
 
 keep_releases: 5
 
-# nginx + Let's Encrypt — เปลี่ยนก่อน setup ครั้งแรก
-domain: "app.example.com"
-ssl_email: "you@example.com"
-ssl_country: "TH"
-ssl_state: "Bangkok"
-ssl_organization: "Apartment Marketplace"
+# nginx + Let's Encrypt
+domain: "summer2026.fanglaostudio.com"
+ssl_email: "freedombrandofficial@gmail.com"
+ssl_country: "LA"
+ssl_state: "Vientiane"
+ssl_organization: "Fanglao Studio"

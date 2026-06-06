@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import {
   RiCalendarLine,
-  RiLockFill,
+  RiLockLine,
   RiMapPinLine,
-  RiSwordFill,
 } from '@remixicon/react'
+import { JamLogo } from '~/components/brand/JamLogo'
 import { NavSectionLink } from '~/components/layout/NavSectionLink'
 import { siteMeta } from '~/components/layout/nav'
 import { Button } from '~/components/ui/button'
@@ -23,64 +23,54 @@ import {
 
 export function JamRegisterClosed() {
   return (
-    <div className="jam-theme flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col">
       <section
         aria-labelledby="jam-register-hero-heading"
-        className="relative border-b border-[color-mix(in_srgb,#D31F26_35%,transparent)] px-4 py-10 md:py-12"
+        className="relative border-b border-primary/20 px-4 py-10 md:py-12"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 jam-event-section-bg"
+          className="pointer-events-none absolute inset-0 jam-event-section-bg opacity-80"
         />
 
         <div className="relative mx-auto flex w-full max-w-3xl flex-col gap-6">
-          <div className="jam-card rounded-2xl border p-5 backdrop-blur-sm md:p-7">
+          <div className="rounded-2xl border border-primary/20 bg-card/80 p-5 shadow-[0_0_40px_color-mix(in_oklch,var(--primary)_8%,transparent)] backdrop-blur-sm md:p-7">
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="jam-eyebrow flex items-center gap-2">
-                <RiSwordFill size={16} />
-                <p className="text-xs font-bold uppercase tracking-[0.25em]">
-                  Battle Arena · Vol. 1
-                </p>
-                <RiSwordFill size={16} />
-              </div>
-
-              <h1
-                id="jam-register-hero-heading"
-                className="jam-title font-heading text-2xl font-black uppercase tracking-tight md:text-3xl"
-              >
+              <h1 id="jam-register-hero-heading" className="sr-only">
                 ລົງທະບຽນ Fanglao Jam
               </h1>
+              <JamLogo size="register" />
 
-              <p className="jam-tagline max-w-xl text-sm md:text-base">
+              <p className="max-w-xl text-sm text-muted-foreground md:text-base">
                 ສຳລັບຜູ້ເຂົ້າແຂ່ງຂັນ qualifier ແລະ battle categories
               </p>
 
               <div className="grid w-full gap-3 sm:grid-cols-2">
-                <div className="jam-info-tile flex items-start gap-2.5 rounded-xl border px-3 py-3 text-left">
+                <div className="flex items-start gap-2.5 rounded-xl border border-border/70 bg-background/40 px-3 py-3 text-left">
                   <RiCalendarLine
                     size={18}
-                    className="jam-meta-icon mt-0.5 shrink-0"
+                    className="mt-0.5 shrink-0 text-primary"
                   />
                   <div className="flex flex-col gap-0.5">
-                    <span className="jam-tagline text-xs font-semibold uppercase tracking-wide">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       ວັນທີ່ແຂ່ງຂັນ
                     </span>
-                    <span className="jam-meta-strong text-sm font-medium">
+                    <span className="text-sm font-medium">
                       {jamEventMeta.dateLao}
                     </span>
                   </div>
                 </div>
 
-                <div className="jam-info-tile flex items-start gap-2.5 rounded-xl border px-3 py-3 text-left">
+                <div className="flex items-start gap-2.5 rounded-xl border border-border/70 bg-background/40 px-3 py-3 text-left">
                   <RiMapPinLine
                     size={18}
-                    className="jam-meta-icon mt-0.5 shrink-0"
+                    className="mt-0.5 shrink-0 text-primary"
                   />
                   <div className="flex flex-col gap-0.5">
-                    <span className="jam-tagline text-xs font-semibold uppercase tracking-wide">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       ສະຖານທີ່
                     </span>
-                    <span className="jam-meta-strong text-sm font-medium leading-snug">
+                    <span className="text-sm font-medium leading-snug">
                       {siteMeta.jamLocation}
                     </span>
                   </div>
@@ -92,35 +82,35 @@ export function JamRegisterClosed() {
       </section>
 
       <div className="mx-auto w-full max-w-3xl px-4 py-8 md:py-10">
-        <Card className="jam-card border bg-transparent shadow-none">
+        <Card className="border-primary/25 bg-card/80">
           <CardHeader className="items-center text-center">
-            <div className="jam-card-icon mb-2 flex size-14 items-center justify-center rounded-full border">
-              <RiLockFill size={28} />
+            <div className="mb-2 flex size-14 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
+              <RiLockLine size={30} />
             </div>
-            <CardTitle className="jam-title font-heading text-xl uppercase md:text-2xl">
+            <CardTitle className="font-heading text-xl uppercase md:text-2xl">
               ຍັງບໍ່ເປີດຮັບລົງທະບຽນ
             </CardTitle>
-            <CardDescription className="jam-tagline max-w-lg text-base">
+            <CardDescription className="max-w-lg text-base">
               ການລົງທະບຽນ Fanglao Jam ຈະເປີດໃນໄວໆນີ້ — ຕິດຕາມຂ່າວສານໃນໜ້າຫຼັກ
               ຫຼືຊ່ອງທາງຕິດຕໍ່ຂອງ Fanglao Studio
             </CardDescription>
           </CardHeader>
 
           <CardContent className="flex flex-col gap-6">
-            <div className="rounded-xl border border-[color-mix(in_srgb,#D31F26_25%,transparent)] bg-[color-mix(in_srgb,#000_45%,transparent)] p-4">
-              <p className="jam-eyebrow mb-3 text-xs font-semibold uppercase tracking-wide">
+            <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
                 ໝວດໝູ່ທີ່ຈະເປີດໃຫ້ສະໝັກ
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <p className="jam-tagline text-xs font-medium uppercase tracking-wide">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Qualifiers
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {jamQualifiers.map((category) => (
                       <span
                         key={category.id}
-                        className="jam-chip--qualifier rounded-full border px-3 py-1 text-xs font-medium text-white"
+                        className="rounded-full border border-border/80 bg-background/50 px-3 py-1 text-xs font-medium text-foreground"
                       >
                         {category.name}
                       </span>
@@ -128,14 +118,14 @@ export function JamRegisterClosed() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="jam-tagline text-xs font-medium uppercase tracking-wide">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Battles
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {jamBattles.map((category) => (
                       <span
                         key={category.id}
-                        className="jam-chip--battle rounded-full border px-3 py-1 text-xs font-medium text-white"
+                        className="rounded-full border border-border/80 bg-background/50 px-3 py-1 text-xs font-medium text-foreground"
                       >
                         {category.name}
                       </span>
@@ -145,20 +135,26 @@ export function JamRegisterClosed() {
               </div>
             </div>
 
-            <ul className="jam-tagline flex list-disc flex-col gap-1.5 pl-5 text-sm">
+            <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm text-muted-foreground">
               <li>ຊື່–ນາມສະກຸນ / ຊື່ທີມ (solo ຫຼື duo)</li>
               <li>ເລືອກໝວດໝູ່ແຂ່ງຂັນ</li>
               <li>ຂໍ້ມູນຕິດຕໍ່</li>
             </ul>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <NavSectionLink
-                sectionId="jam-event"
-                label="ເບິ່ງລາຍລະອຽດ Fanglao Jam"
-                className="jam-btn-outline inline-flex h-10 flex-1 items-center justify-center rounded-lg border px-4 text-sm font-semibold uppercase tracking-wide transition-colors"
-                activeClassName="text-[#D31F26]"
-              />
-              <Button size="lg" className="jam-btn-outline flex-1" asChild>
+              <Button size="lg" variant="outline" className="flex-1" asChild>
+                <NavSectionLink
+                  sectionId="jam-event"
+                  label="ເບິ່ງລາຍລະອຽດ Fanglao Jam"
+                  className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-4 text-sm font-medium"
+                  activeClassName="text-primary"
+                />
+              </Button>
+              <Button
+                size="lg"
+                className="flex-1 shadow-lg shadow-primary/25"
+                asChild
+              >
                 <Link to="/register/camp">ລົງທະບຽນ Summer Camp</Link>
               </Button>
             </div>

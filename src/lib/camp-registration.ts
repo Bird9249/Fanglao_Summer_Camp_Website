@@ -89,8 +89,8 @@ const campRegistrationBaseSchema = z.object({
     .min(8, 'ກະລຸນາກອກເບີໂທທີ່ຖືກຕ້ອງ')
     .max(20, 'ເບີໂທຍາວເກີນໄປ')
     .regex(/^[\d\s+\-()]+$/, 'ເບີໂທຕ້ອງເປັນຕົວເລກເທົ່ານັ້ນ'),
-  classIds: z
-    .array(z.enum(campStyleIds))
+  classTypeIds: z
+    .array(z.string().min(1))
     .min(1, 'ກະລຸນາເລືອກຢ່າງໜ້ອຍ 1 ຄລາສ'),
 })
 

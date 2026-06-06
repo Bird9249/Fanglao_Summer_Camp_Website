@@ -1,4 +1,4 @@
-- name: Deploy Website server only
+- name: Deploy Fanglao Summer Camp 2026 website
   hosts: prod
   become: true
   vars_files:

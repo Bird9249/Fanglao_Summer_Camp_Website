@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { RiMapPinFill, RiSwordFill } from '@remixicon/react'
+import { RiMapPinFill } from '@remixicon/react'
 import { BracketPreview } from './BracketPreview'
 import { JamCategoryPanel } from './JamCategoryPanel'
+import { JamEventLogo } from './JamEventLogo'
 import { useInView } from '~/hooks/use-in-view'
 import {
   jamBattles,
@@ -9,7 +10,6 @@ import {
   jamQualifiers,
 } from '~/lib/jam-event'
 import { Button } from '~/components/ui/button'
-import { cn } from '~/lib/utils'
 
 export function JamEventSection() {
   const { ref, inView } = useInView({ threshold: 0.15 })
@@ -19,9 +19,7 @@ export function JamEventSection() {
       id="jam-event"
       ref={ref}
       aria-labelledby="jam-event-heading"
-      className={cn(
-        'jam-theme jam-event-section relative scroll-mt-18 overflow-hidden border-t px-4 py-16 md:py-20',
-      )}
+      className="jam-event-section relative scroll-mt-18 overflow-hidden border-t border-primary/20 px-4 py-16 md:py-20"
     >
       <div
         aria-hidden
@@ -29,30 +27,21 @@ export function JamEventSection() {
       />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10">
-        <header className="flex flex-col items-center gap-3 text-center">
-          <div className="jam-eyebrow flex items-center gap-2">
-            <RiSwordFill size={18} />
-            <p className="text-xs font-bold uppercase tracking-[0.25em]">
-              Battle Arena · Vol. 1
-            </p>
-            <RiSwordFill size={18} />
-          </div>
-          <h2
-            id="jam-event-heading"
-            className="jam-title font-heading text-3xl font-black uppercase tracking-tight md:text-4xl"
-          >
+        <header className="flex flex-col items-center gap-4 text-center">
+          <h2 id="jam-event-heading" className="sr-only">
             {jamEventMeta.title}
           </h2>
-          <p className="jam-tagline max-w-xl text-sm md:text-base">
+          <JamEventLogo />
+          <p className="max-w-xl text-sm text-muted-foreground md:text-base">
             {jamEventMeta.tagline}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <span className="jam-meta-strong font-semibold">
+            <span className="font-semibold text-foreground">
               {jamEventMeta.dateLao}
             </span>
-            <span className="hidden jam-meta-icon md:inline">·</span>
-            <span className="jam-meta-muted flex items-center gap-1.5">
-              <RiMapPinFill size={16} className="jam-meta-icon" />
+            <span className="hidden text-primary md:inline">·</span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <RiMapPinFill size={16} className="text-primary" />
               {jamEventMeta.location}
             </span>
           </div>
@@ -76,7 +65,11 @@ export function JamEventSection() {
         <BracketPreview active={inView} />
 
         <div className="flex justify-center">
-          <Button size="lg" className="jam-btn-cta h-12 px-8" asChild>
+          <Button
+            size="lg"
+            className="shadow-xl shadow-primary/30"
+            asChild
+          >
             <Link to="/register/jam">ສະໝັກແຂ່ງ Fanglao Jam</Link>
           </Button>
         </div>

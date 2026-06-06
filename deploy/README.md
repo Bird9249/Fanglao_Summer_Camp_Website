@@ -1,6 +1,8 @@
-# Ansible — deploy โปรเจกต์ Marketplace (TanStack Start + Nitro/Bun)
+# Ansible — deploy Fanglao Summer Camp 2026
 
-รากโปรเจกต์: `package.json` (`name`: marketplace). การ build (`bun run build`) สร้าง **`.output/`** (มี `server/index.mjs`) ผ่าน Vite + Nitro preset `bun` — service ตั้ง `WorkingDirectory` เป็น symlink `current` ของ release แล้วรัน `bun .output/server/index.mjs`
+เว็บสาธารณะ Summer Dance Camp & Jam — TanStack Start + Nitro (Bun)
+
+การ build (`bun run build`) สร้าง **`.output/`** (มี `server/index.mjs`) — systemd รัน `bun .output/server/index.mjs` จาก symlink `current`
 
 ## ความต้องการ
 
@@ -10,71 +12,70 @@
 
 **เซิร์ฟเวอร์ (Ubuntu/Debian)**
 
-- Bun, Nginx, rsync  
+- Bun, Nginx, rsync
 - PostgreSQL (หรือ DB ที่ `DATABASE_URL` ชี้ไป)
+- Fanglao Admin API รันอยู่และเปิด public camp endpoints (`ADMIN_API_URL`)
 
 ## ครั้งแรก
 
 ### 1) ปรับ inventory และตัวแปร prod
 
-แก้ `deploy/inventory/hosts.ini` ให้ตรง host ของคุณ  
+แก้ `deploy/inventory/hosts.ini` ให้ตรง host ของคุณ
 
 แก้ `deploy/group_vars/prod.yml` โดยเฉพาะ:
 
-- `local_repo` — path ราก repo นี้บนเครื่องคุณ  
-- `domain`, `ssl_email` — สำหรับ Let's Encrypt  
-- `app_name` / `service` / `app_root` — ถ้าต้องการชื่ออื่น ให้เปลี่ยนคู่กัน และตั้ง env ที่ `/etc/<app_name>.env`
-
-ตัวแปร `[[app_name]]` ใน template ของ systemd ชี้ไปที่ชื่อไฟล์ใน `deploy/playbooks/templates/[[app_name]].service.j2` — playbook จะเขียนไปเป็น `/etc/systemd/system/{{ app_name }}.service`
+- `local_repo` — path ราก `Summer_Camp_2026` บนเครื่องคุณ
+- `domain`, `ssl_email` — สำหรับ Let's Encrypt
+- `port` — **3001** (แยกจาก Admin ที่ 3000 บนเซิร์ฟเวอร์เดียวกัน)
+- `app_name` / `service` / `app_root` — ค่าเริ่มต้น `summer-camp-2026` + `/opt/summer-camp-2026`
 
 ### 2) ไฟล์ environment บนเซิร์ฟเวอร์
 
-จากตัวอย่าง:
-
 ```bash
-sudo cp deploy/templates/env.example /etc/marketplace.env
-sudo nano /etc/marketplace.env
-sudo chmod 600 /etc/marketplace.env
-sudo chown root:root /etc/marketplace.env
+sudo cp deploy/templates/env.example /etc/summer-camp-2026.env
+sudo nano /etc/summer-camp-2026.env
+sudo chmod 600 /etc/summer-camp-2026.env
+sudo chown root:root /etc/summer-camp-2026.env
 ```
 
-ถ้าเปลี่ยน `app_name` ใน `prod.yml` ให้ใช้ชื่อไฟล์เดียวกัน เช่น `/etc/<app_name>.env`
+ค่าสำคัญ: `ADMIN_API_URL`, `CAMP_API_KEY`, `SITE_URL`, `BETTER_AUTH_SECRET`, `DATABASE_URL`, `GA_MEASUREMENT_ID`
 
-ค่าสำคัญ: `NODE_ENV`, `PORT`, `DATABASE_URL`, `BETTER_AUTH_SECRET`, `CORS_ORIGIN` และค่าอื่นที่โค้ดเรียกใช้
+ดูรายการตัวแปรทั้งหมดได้จาก `.env.example` ที่รากโปรเจกต์
 
 ### 3) Setup systemd + nginx + SSL
 
-แนะนำรันจากโฟลเดอร์ `deploy/` เพื่อให้โหลด `ansible.cfg` และ inventory เริ่มต้นถูกต้อง
-
 ```bash
-cd /path/to/Plateform/deploy
+cd /home/bird/Desktop/fanglao/Summer_Camp_2026/deploy
 ansible-playbook playbooks/setup.yml
 ```
-
-จากรากโปรเจกต์แทนได้: `ANSIBLE_CONFIG=deploy/ansible.cfg ansible-playbook -i deploy/inventory/hosts.ini deploy/playbooks/setup.yml`
 
 ## Deploy
 
 Playbook จะ **build บนเครื่องเรียก ansible** (`bun run build` ที่ `local_repo`) แล้ว rsync `.output/` ขึ้นเซิร์ฟเวอร์ สลับ symlink `current` และ restart service
 
+ก่อน deploy ตรวจว่า `.env.production` บนเครื่อง local ถูกต้อง (ค่าจะถูก bake ตอน build สำหรับบางตัวแปร)
+
 ```bash
-cd /path/to/Plateform/deploy
+cd /home/bird/Desktop/fanglao/Summer_Camp_2026/deploy
 ansible-playbook playbooks/deploy-website.yml
 ```
 
 ## Rollback
 
 ```bash
-export APP_NAME=marketplace SERVER_ROOT=/opt/marketplace service=marketplace
 ./deploy/scripts/rollback.sh
 ```
 
-(ค่า default ของสคริปต์เป็นชุด marketplace อยู่แล้ว — override ได้ด้วย env)
+หรือ override:
+
+```bash
+APP_NAME=summer-camp-2026 SERVER_ROOT=/opt/summer-camp-2026 service=summer-camp-2026 ./deploy/scripts/rollback.sh
+```
 
 ## โครงหน้าบนเซิร์ฟเวอร์
 
 ```
-/opt/marketplace/
+/opt/summer-camp-2026/
 ├── releases/
 │   └── <epoch>/
 │       └── .output/
@@ -86,12 +87,14 @@ export APP_NAME=marketplace SERVER_ROOT=/opt/marketplace service=marketplace
 ## Troubleshooting
 
 ```bash
-sudo systemctl status marketplace
-sudo journalctl -u marketplace -f
+sudo systemctl status summer-camp-2026
+sudo journalctl -u summer-camp-2026 -f
 sudo nginx -t && sudo systemctl reload nginx
+curl -fsS https://summer2026.fanglaostudio.com/
 ```
 
 ## หมายเหตุ
 
-- Deploy เป็นแบบ symlink ใหม่แล้วสลับ `current` — release เก่าถูกตัดเมื่อเกิน `keep_releases`  
-- พอร์ตที่ nginx proxy ควรตรงกับ `port` ใน `prod.yml` และค่าที่แอป listen (โดยทั่วไปสอดคล้อง `PORT` ในไฟล์ env)
+- Deploy เป็นแบบ symlink ใหม่แล้วสลับ `current` — release เก่าถูกตัดเมื่อเกิน `keep_releases`
+- `port` ใน `prod.yml` ต้องตรงกับ `PORT` ใน `/etc/summer-camp-2026.env` (ค่าเริ่มต้น **3001**)
+- Camp registration เรียก Admin API — ตั้ง `CAMP_API_KEY` ให้ตรงกับ `CAMP_PUBLIC_API_KEY` ใน Fanglao Admin

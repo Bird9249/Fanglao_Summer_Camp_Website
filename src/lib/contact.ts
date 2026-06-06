@@ -1,11 +1,10 @@
-import type { ComponentType } from 'react'
 import {
   RiFacebookFill,
   RiInstagramFill,
-  RiMailLine,
   RiTiktokFill,
-  RiWhatsappFill,
+  RiWhatsappFill
 } from '@remixicon/react'
+import type { ComponentType } from 'react'
 
 export const contactInfo = {
   email: 'kaka.fanglaostudio@gmail.com',
@@ -31,25 +30,25 @@ export const socialLinks: SocialLink[] = [
   {
     id: 'instagram',
     label: 'Instagram',
-    href: 'https://instagram.com/fanglaostudio',
+    href: 'https://www.instagram.com/fanglao.studio/?hl=en',
     icon: RiInstagramFill,
   },
   {
     id: 'tiktok',
     label: 'TikTok',
-    href: 'https://tiktok.com/@fanglaostudio',
+    href: 'https://www.tiktok.com/@fanglaodancestudio?is_from_webapp=1&sender_device=pc',
     icon: RiTiktokFill,
   },
   {
     id: 'facebook',
     label: 'Facebook',
-    href: 'https://facebook.com/fanglaostudio',
+    href: 'https://www.facebook.com/FanglaoDanceStudio/',
     icon: RiFacebookFill,
   },
   {
     id: 'whatsapp',
     label: 'WhatsApp',
-    href: 'https://wa.me/',
+    href: 'https://wa.me/8562055706809',
     icon: RiWhatsappFill,
   },
 ]

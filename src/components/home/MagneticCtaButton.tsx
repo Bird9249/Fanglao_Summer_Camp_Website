@@ -5,7 +5,7 @@ import { cn } from '~/lib/utils'
 type MagneticCtaButtonProps = {
   to: string
   children: React.ReactNode
-  variant: 'gold' | 'purple' | 'jam'
+  variant: 'gold' | 'purple'
 }
 
 export function MagneticCtaButton({
@@ -67,9 +67,7 @@ export function MagneticCtaButton({
           'magnetic-cta-splash pointer-events-none absolute inset-0 -z-10 rounded-xl',
           variant === 'gold'
             ? 'magnetic-cta-splash--gold'
-            : variant === 'jam'
-              ? 'magnetic-cta-splash--jam'
-              : 'magnetic-cta-splash--purple',
+            : 'magnetic-cta-splash--purple',
           hovered && motionEnabled && 'magnetic-cta-splash--active',
         )}
       />
@@ -79,9 +77,7 @@ export function MagneticCtaButton({
           'relative inline-flex h-14 w-full min-w-56 items-center justify-center rounded-xl px-8 text-center text-sm font-bold uppercase tracking-wide transition-shadow sm:text-base',
           variant === 'gold'
             ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/40 hover:shadow-primary/55'
-            : variant === 'jam'
-              ? 'magnetic-cta-link--jam'
-              : 'border border-primary/50 bg-accent text-accent-foreground shadow-xl shadow-accent/35 hover:border-primary/70 hover:shadow-primary/25',
+            : 'border border-primary/50 bg-accent text-accent-foreground shadow-xl shadow-accent/35 hover:border-primary/70 hover:shadow-primary/25',
         )}
       >
         {children}

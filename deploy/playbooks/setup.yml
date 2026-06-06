@@ -6,6 +6,17 @@
   vars:
     ansible_roles_path: ../roles
   tasks:
+    - name: Ensure app directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+      loop:
+        - "{{ app_root }}"
+        - "{{ server_releases }}"
+
     - name: Create systemd service files
       template:
         src: "[[app_name]].service.j2"

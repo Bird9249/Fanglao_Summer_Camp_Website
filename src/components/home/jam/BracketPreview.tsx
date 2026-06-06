@@ -53,8 +53,8 @@ function BracketConnector({
 
 export function BracketPreview({ active }: { active: boolean }) {
   return (
-    <div className="bracket-preview overflow-hidden rounded-2xl border p-4 md:p-6">
-      <p className="jam-title mb-4 text-center font-heading text-xs font-bold uppercase tracking-[0.2em]">
+    <div className="bracket-preview overflow-hidden rounded-2xl border border-primary/25 bg-background/50 p-4 md:p-6">
+      <p className="mb-4 text-center font-heading text-xs font-bold uppercase tracking-[0.2em] text-primary">
         Tournament Bracket Preview
       </p>
 
@@ -64,10 +64,10 @@ export function BracketPreview({ active }: { active: boolean }) {
         className="mx-auto w-full max-w-3xl"
       >
         <defs>
-          <linearGradient id="bracket-glow-jam" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#D31F26" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="#D31F26" stopOpacity="1" />
-            <stop offset="100%" stopColor="#D31F26" stopOpacity="0.2" />
+          <linearGradient id="bracket-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="oklch(0.88 0.195 92)" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="oklch(0.88 0.195 92)" stopOpacity="1" />
+            <stop offset="100%" stopColor="oklch(0.88 0.195 92)" stopOpacity="0.2" />
           </linearGradient>
         </defs>
 
@@ -148,7 +148,7 @@ export function BracketPreview({ active }: { active: boolean }) {
         </text>
       </svg>
 
-      <p className="jam-tagline mt-3 text-center text-xs">
+      <p className="mt-3 text-center text-xs text-muted-foreground">
         Lao National Circus · Vientiane
       </p>
     </div>

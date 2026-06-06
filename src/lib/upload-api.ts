@@ -16,7 +16,7 @@ export type MultipartCompleteResponse = { key: string }
 const baseUrl =
   typeof window !== 'undefined'
     ? `${window.location.origin}/api/upload`
-    : `${process.env.BETTER_AUTH_URL ?? 'http://localhost:3000'}/api/upload`
+    : `${process.env.BETTER_AUTH_URL ?? 'http://localhost:3001'}/api/upload`
 
 async function postJson<TBody extends object, TRes>(
   path: string,

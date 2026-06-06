@@ -21,7 +21,7 @@ export function getSiteUrl() {
     process.env.SITE_URL ??
     process.env.BETTER_AUTH_URL ??
     process.env.VITE_APP_URL ??
-    'http://localhost:3000'
+    'http://localhost:3001'
 
   return raw.replace(/\/$/, '')
 }

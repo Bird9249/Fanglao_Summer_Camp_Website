@@ -9,7 +9,15 @@ import * as React from 'react'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
+import { GoogleAnalytics } from '~/components/analytics/GoogleAnalytics'
+import {
+  getGaMeasurementId,
+  shouldLoadGoogleAnalytics,
+} from '~/lib/analytics'
 import { siteSeoConfig } from '~/lib/site-seo'
+
+const gaMeasurementId = getGaMeasurementId()
+const loadGoogleAnalytics = shouldLoadGoogleAnalytics()
 
 export const Route = createRootRoute({
   head: () => ({
@@ -57,9 +65,28 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="lo">
       <head>
         <HeadContent />
+        {loadGoogleAnalytics && gaMeasurementId ? (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaMeasurementId}', { send_page_view: false });
+                `,
+              }}
+            />
+          </>
+        ) : null}
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
+        {loadGoogleAnalytics ? <GoogleAnalytics /> : null}
         {import.meta.env.DEV ? (
           <TanStackRouterDevtools position="bottom-right" />
         ) : null}

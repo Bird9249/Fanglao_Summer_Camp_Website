@@ -1,4 +1,4 @@
-# Quick Start — Marketplace (Plateform)
+# Quick Start — Fanglao Summer Camp 2026
 
 ## 1. แก้ config
 
@@ -11,10 +11,10 @@ your.server.ip ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_ed25519
 
 ### `deploy/group_vars/prod.yml`
 
-- `local_repo`: path ราก repo บนเครื่องคุณ (ค่าตั้งต้นชี้ไปที่ `Plateform`)
-- `domain`, `ssl_email`: สำหรับ certbot
-- `app_name` / `service` / `app_root`: ชุดที่ต้องการ (ค่าตั้งต้น `marketplace` + `/opt/marketplace`)
-- `port`: พอร์ต upstream (ควรตรงกับ `PORT` ใน env เช่น `3000`)
+- `local_repo`: `/home/bird/Desktop/fanglao/Summer_Camp_2026`
+- `domain`: `summer2026.fanglaostudio.com`
+- `ssl_email`: อีเมลสำหรับ Let's Encrypt
+- `port`: **3001** (Admin ใช้ 3000 บนเซิร์ฟเวอร์เดียวกัน)
 
 ## 2. เซิร์ฟเวอร์
 
@@ -22,20 +22,27 @@ your.server.ip ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_ed25519
 curl -fsSL https://bun.sh/install | bash
 sudo apt update
 sudo apt install -y nginx certbot python3-certbot-nginx rsync
-sudo mkdir -p /opt/marketplace
+sudo mkdir -p /opt/summer-camp-2026/releases
 ```
 
 ## 3. Environment
 
 ```bash
-sudo cp deploy/templates/env.example /etc/marketplace.env   # หรือ /etc/<app_name>.env
-sudo nano /etc/marketplace.env
-sudo chmod 600 /etc/marketplace.env
+sudo cp deploy/templates/env.example /etc/summer-camp-2026.env
+sudo nano /etc/summer-camp-2026.env
+sudo chmod 600 /etc/summer-camp-2026.env
 ```
+
+ตั้งค่าหลัก:
+
+- `ADMIN_API_URL=https://admin.fanglaostudio.com`
+- `CAMP_API_KEY=` (ตรงกับ Admin)
+- `SITE_URL` / `BETTER_AUTH_URL` = URL เว็บ Camp
+- `GA_MEASUREMENT_ID` = GA4 Measurement ID
 
 ## 4. Ansible
 
-จากโฟลเดอร์ `deploy/` (เพื่อโหลด `ansible.cfg`):
+จากโฟลเดอร์ `deploy/`:
 
 ```bash
 cd deploy
@@ -48,9 +55,9 @@ ansible-playbook playbooks/deploy-website.yml
 ## 5. ตรวจสอบ
 
 ```bash
-sudo systemctl status marketplace nginx
-sudo journalctl -u marketplace -f
-curl -fsS https://YOUR_DOMAIN/
+sudo systemctl status summer-camp-2026 nginx
+sudo journalctl -u summer-camp-2026 -f
+curl -fsS https://summer2026.fanglaostudio.com/
 ```
 
 ## 6. Rollback
@@ -62,13 +69,11 @@ curl -fsS https://YOUR_DOMAIN/
 ## โครง release
 
 ```
-/opt/marketplace/releases/<id>/.output/server/index.mjs
-/opt/marketplace/current -> .../releases/<id>
+/opt/summer-camp-2026/releases/<id>/.output/server/index.mjs
+/opt/summer-camp-2026/current -> .../releases/<id>
 ```
 
 ## SSL renew
-
-บนเซิร์ฟเวอร์ (หรือใช้ cron ที่ playbook setup ไว้):
 
 ```bash
 sudo certbot renew --nginx --quiet

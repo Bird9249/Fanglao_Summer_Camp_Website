@@ -12,25 +12,18 @@ export function JamCategoryPanel({
   categories: JamCategory[]
   variant: 'qualifier' | 'battle'
 }) {
-  const isQualifier = variant === 'qualifier'
-
   return (
     <div
       className={cn(
-        'jam-panel flex flex-col gap-5 rounded-2xl p-5 md:p-6',
-        isQualifier ? 'jam-panel--qualifier' : 'jam-panel--battle',
+        'jam-panel flex flex-col gap-5 rounded-2xl border p-5 md:p-6',
+        variant === 'qualifier' ? 'jam-panel--qualifier' : 'jam-panel--battle',
       )}
     >
       <div className="flex flex-col gap-1">
-        <h3
-          className={cn(
-            'font-heading text-lg font-bold uppercase tracking-wide md:text-xl',
-            isQualifier ? 'jam-panel-title--qualifier' : 'jam-panel-title--battle',
-          )}
-        >
+        <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-primary md:text-xl">
           {title}
         </h3>
-        <p className="jam-tagline text-xs uppercase tracking-[0.15em]">
+        <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
           {subtitle}
         </p>
       </div>
@@ -41,38 +34,19 @@ export function JamCategoryPanel({
           return (
             <li
               key={category.id}
-              className={cn(
-                'jam-category-card flex gap-3 rounded-xl p-4',
-                isQualifier
-                  ? 'jam-category-card--qualifier'
-                  : 'jam-category-card--battle',
-              )}
+              className="flex gap-3 rounded-xl border border-border/60 bg-background/40 p-4"
             >
-              <span
-                className={cn(
-                  'flex size-10 shrink-0 items-center justify-center rounded-lg border',
-                  isQualifier
-                    ? 'jam-category-icon--qualifier'
-                    : 'jam-category-icon--battle',
-                )}
-              >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/35 bg-primary/10 text-primary">
                 <Icon size={20} />
               </span>
               <div className="flex flex-col gap-1">
-                <p className="font-heading text-sm font-bold uppercase tracking-wide text-white">
+                <p className="font-heading text-sm font-bold uppercase tracking-wide">
                   {category.name}
                 </p>
-                <p
-                  className={cn(
-                    'text-xs',
-                    isQualifier
-                      ? 'jam-category-lao--qualifier'
-                      : 'jam-category-lao--battle',
-                  )}
-                >
-                  {category.lao}
+                <p className="text-xs text-primary">{category.lao}</p>
+                <p className="text-sm text-muted-foreground">
+                  {category.description}
                 </p>
-                <p className="jam-tagline text-sm">{category.description}</p>
               </div>
             </li>
           )

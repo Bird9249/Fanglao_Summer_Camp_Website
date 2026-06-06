@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Button } from '~/components/ui/button'
 import { scrollToSection } from '~/lib/scroll-to-section'
 import { cn } from '~/lib/utils'
+import { FanglaoLogo } from '~/components/brand/FanglaoLogo'
 import { NavSectionLink } from './NavSectionLink'
 import { mainNav, registerNav } from './nav'
 
@@ -35,15 +36,11 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4">
         <a
           href="/#hero-section"
-          className="flex shrink-0 flex-col leading-none"
+          className="flex shrink-0 items-center"
           onClick={goHome}
+          aria-label="Fanglao Studio — ໜ້າຫຼັກ"
         >
-          <span className="font-heading text-lg font-bold tracking-tight uppercase">
-            Fanglao
-          </span>
-          <span className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-primary">
-            2026
-          </span>
+          <FanglaoLogo />
         </a>
 
         <nav

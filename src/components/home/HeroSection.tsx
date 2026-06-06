@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { HeroLaoTitle } from './HeroLaoTitle'
-import { HeroTextReveal } from './HeroTextReveal'
+import { HeroCampLogo } from './HeroCampLogo'
 import { MagneticCtaButton } from './MagneticCtaButton'
 
 const HERO_VIDEO_SRC = '/videos/RecapVerticalLaoHiphop3.mp4'
@@ -41,16 +40,13 @@ export function HeroSection() {
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center gap-8 text-center md:gap-10">
-        <div className="flex w-full flex-col items-center gap-2 md:gap-3">
-          <HeroLaoTitle />
-          <HeroTextReveal />
-        </div>
+        <HeroCampLogo />
 
         <div className="flex w-full max-w-2xl flex-col gap-4 sm:flex-row sm:justify-center">
           <MagneticCtaButton to="/register/camp" variant="gold">
             ລົງທະບຽນ Summer Camp
           </MagneticCtaButton>
-          <MagneticCtaButton to="/register/jam" variant="jam">
+          <MagneticCtaButton to="/register/jam" variant="purple">
             ສະໝັກແຂ່ງ Fanglao Jam
           </MagneticCtaButton>
         </div>

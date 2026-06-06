@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { RiCheckLine, RiUserLine } from '@remixicon/react'
+import { RiUserLine } from '@remixicon/react'
 import * as React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '~/components/ui/button'
@@ -12,20 +12,21 @@ import {
 } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { trackGaEvent } from '~/lib/analytics'
+import type { CampClassPublicDTO } from '~/lib/camp-registration-api'
+import { submitCampRegistrationFn } from '~/lib/camp-registration.functions'
 import {
   campBirthDateBounds,
   campGenderIds,
   campGenderLabels,
   campRegistrationSchema,
-  formatBirthDateLao,
-  formatGenderDisplay,
   type CampGender,
   type CampRegistrationFormInput,
   type CampRegistrationFormValues,
-  type CampStyleId,
 } from '~/lib/camp-registration'
 import { cn } from '~/lib/utils'
 import { CampClassSelector } from './CampClassSelector'
+import { CampRegistrationSuccess } from './CampRegistrationSuccess'
 
 function FormField({
   id,
@@ -53,14 +54,20 @@ function FormField({
   )
 }
 
+type SuccessState = {
+  registrationId: string
+  data: CampRegistrationFormValues
+}
+
 export function CampRegistrationForm({
-  defaultClassIds = [],
+  classes,
+  defaultClassTypeIds = [],
 }: {
-  defaultClassIds?: CampStyleId[]
+  classes: CampClassPublicDTO[]
+  defaultClassTypeIds?: string[]
 }) {
-  const [submitted, setSubmitted] = React.useState(false)
-  const [submittedData, setSubmittedData] =
-    React.useState<CampRegistrationFormValues | null>(null)
+  const [success, setSuccess] = React.useState<SuccessState | null>(null)
+  const [submitError, setSubmitError] = React.useState<string | null>(null)
 
   const {
     register,
@@ -83,85 +90,98 @@ export function CampRegistrationForm({
       gender: undefined,
       genderOther: '',
       phone: '',
-      classIds: defaultClassIds,
+      classTypeIds: defaultClassTypeIds,
     },
   })
 
   const selectedGender = watch('gender')
 
-  const onSubmit = (data: CampRegistrationFormValues) => {
-    setSubmittedData(data)
-    setSubmitted(true)
+  const classLabelById = React.useMemo(() => {
+    const map = new Map<string, string>()
+    for (const item of classes) {
+      map.set(item.classTypeId, item.labelLao || item.name)
+    }
+    return map
+  }, [classes])
+
+  const onSubmit = async (data: CampRegistrationFormValues) => {
+    setSubmitError(null)
+
+    const result = await submitCampRegistrationFn({
+      data: {
+        fullName: data.fullName,
+        nickname: data.nickname,
+        dateOfBirth: data.dateOfBirth,
+        gender: data.gender,
+        genderOther: data.genderOther,
+        phoneNumber: data.phone,
+        classTypeIds: data.classTypeIds,
+      },
+    })
+
+    if (!result.ok) {
+      trackGaEvent('camp_register_error', {
+        error_code: result.code ?? 'UNKNOWN',
+      })
+
+      if (result.code === 'NETWORK') {
+        setSubmitError('ບໍ່ສາມາດເຊື່ອມຕໍ່ໄດ້ — ກະລຸນາລອງໃໝ່ອີກຄັ້ງ')
+        return
+      }
+      if (result.code === 'EVENT_NOT_OPEN') {
+        setSubmitError('ປິດຮັບລົງທະບຽນແລ້ວ')
+        return
+      }
+      if (result.code === 'AGE_OUT_OF_RANGE') {
+        setSubmitError('ອາຍຸບໍ່ຢູ່ໃນໄລຍະທີ່ກຳນົດ')
+        return
+      }
+      if (result.code === 'INVALID_CLASS') {
+        setSubmitError('ຄລາສທີ່ເລືອກບໍ່ຖືກຕ້ອງ — ກະລຸນາໂຫຼດໜ້າໃໝ່')
+        return
+      }
+      setSubmitError('ສົ່ງແບບຟອມບໍ່ສຳເລັດ — ກະລຸນາລອງໃໝ່')
+      return
+    }
+
+    trackGaEvent('camp_register_submit', {
+      class_count: data.classTypeIds.length,
+      classes: data.classTypeIds.join(','),
+    })
+
+    setSuccess({
+      registrationId: result.data.registrationId,
+      data,
+    })
   }
 
-  if (submitted && submittedData) {
-    return (
-      <Card className="border-primary/30 bg-card/90">
-        <CardHeader className="items-center text-center">
-          <div className="mb-2 flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <RiCheckLine size={32} />
-          </div>
-          <CardTitle className="font-heading uppercase">ສົ່ງແບບຟອມສຳເລັດ</CardTitle>
-          <CardDescription>
-            ຂໍ້ມູນຂອງທ່ານຖືກບັນທຶກແລ້ວ (ໂໝດທົດສອບ frontend) — ທີມງານຈະຕິດຕໍ່ກັບຄືນໃນໄວໆນີ້
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4 text-sm">
-          <div className="rounded-xl border border-border/70 bg-muted/30 p-4">
-            <p>
-              <span className="text-muted-foreground">ຊື່:</span>{' '}
-              <span className="font-medium">{submittedData.fullName}</span>
-            </p>
-            <p>
-              <span className="text-muted-foreground">ຊື່ຫຼິ້ນ:</span>{' '}
-              <span className="font-medium">{submittedData.nickname}</span>
-            </p>
-            <p>
-              <span className="text-muted-foreground">ວັນເດືອນປີເກີດ:</span>{' '}
-              <span className="font-medium">
-                {formatBirthDateLao(submittedData.dateOfBirth)}
-              </span>
-            </p>
-            <p>
-              <span className="text-muted-foreground">ອາຍຸ:</span>{' '}
-              <span className="font-medium">{submittedData.age} ປີ</span>
-            </p>
-            <p>
-              <span className="text-muted-foreground">ເພດ:</span>{' '}
-              <span className="font-medium">
-                {formatGenderDisplay(submittedData)}
-              </span>
-            </p>
-            <p>
-              <span className="text-muted-foreground">ຄລາສ:</span>{' '}
-              <span className="font-medium">{submittedData.classIds.join(', ')}</span>
-            </p>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setSubmitted(false)
-              setSubmittedData(null)
-              reset({
-                fullName: '',
-                nickname: '',
-                dateOfBirth: '',
-                gender: undefined,
-                genderOther: '',
-                phone: '',
-                classIds: defaultClassIds,
-              })
-            }}
-          >
-            ກອກແບບຟອມໃໝ່
-          </Button>
-        </CardContent>
-      </Card>
-    )
+  const handleRegisterAgain = () => {
+    setSuccess(null)
+    reset({
+      fullName: '',
+      nickname: '',
+      dateOfBirth: '',
+      gender: undefined,
+      genderOther: '',
+      phone: '',
+      classTypeIds: defaultClassTypeIds,
+    })
   }
 
   return (
+    <>
+      {success ? (
+        <CampRegistrationSuccess
+          registrationId={success.registrationId}
+          data={success.data}
+          classLabels={success.data.classTypeIds.map(
+            (id) => classLabelById.get(id) ?? id,
+          )}
+          onRegisterAgain={handleRegisterAgain}
+        />
+      ) : null}
+
+      {!success ? (
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
@@ -320,19 +340,26 @@ export function CampRegistrationForm({
         </CardHeader>
         <CardContent>
           <Controller
-            name="classIds"
+            name="classTypeIds"
             control={control}
             render={({ field }) => (
               <CampClassSelector
+                classes={classes}
                 value={field.value}
                 onChange={field.onChange}
-                error={errors.classIds?.message}
+                error={errors.classTypeIds?.message}
                 disabled={isSubmitting}
               />
             )}
           />
         </CardContent>
       </Card>
+
+      {submitError ? (
+        <p className="text-center text-sm text-destructive" role="alert">
+          {submitError}
+        </p>
+      ) : null}
 
       <div className="flex justify-center sm:justify-end">
         <Button
@@ -345,5 +372,7 @@ export function CampRegistrationForm({
         </Button>
       </div>
     </form>
+      ) : null}
+    </>
   )
 }

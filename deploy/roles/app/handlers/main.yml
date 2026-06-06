@@ -2,7 +2,7 @@
   command: systemctl daemon-reload
   become: true
 
-- name: restart api
+- name: restart website
   systemd:
     name: "{{ service }}"
     state: restarted

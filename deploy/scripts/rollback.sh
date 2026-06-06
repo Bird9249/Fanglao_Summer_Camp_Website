@@ -3,9 +3,9 @@
 
 set -e
 
-APP_NAME="${APP_NAME:-marketplace}"
-SERVER_ROOT="${SERVER_ROOT:-/opt/marketplace}"
-service="${service:-marketplace}"
+APP_NAME="${APP_NAME:-summer-camp-2026}"
+SERVER_ROOT="${SERVER_ROOT:-/opt/summer-camp-2026}"
+service="${service:-summer-camp-2026}"
 
 echo "Rolling back $APP_NAME..."
 

@@ -2,7 +2,7 @@
 
 export function marketplaceApiOrigin(): string {
   if (typeof window !== 'undefined') return window.location.origin
-  return process.env.BETTER_AUTH_URL ?? 'http://localhost:3000'
+  return process.env.BETTER_AUTH_URL ?? 'http://localhost:3001'
 }
 
 /** พรีวิวไฟล์ใน bucket ผ่าน GET `/api/files/<key>` */

@@ -22,7 +22,7 @@ function initAuth(): ReturnType<typeof betterAuth> {
     const baseURL =
       process.env.BETTER_AUTH_URL ??
       process.env.VITE_APP_URL ??
-      'http://localhost:3000'
+      'http://localhost:3001'
 
     _auth = betterAuth({
       secret: resolveSecret(),
