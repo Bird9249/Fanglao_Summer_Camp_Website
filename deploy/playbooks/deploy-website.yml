@@ -58,6 +58,9 @@
     - name: Include deploy only website tasks
       include_tasks: ../roles/app/tasks/release_website.yml
 
+    - name: Configure nginx performance (gzip, cache, upstream)
+      include_tasks: tasks/nginx-site.yml
+
     - name: Prune old server releases
       shell: |
         cd {{ server_releases }}

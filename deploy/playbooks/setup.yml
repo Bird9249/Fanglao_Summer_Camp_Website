@@ -67,34 +67,14 @@
         path: "/etc/nginx/sites-enabled/{{ app_name }}"
         state: absent
 
-    - name: Create SSL-enabled nginx configs
-      template:
-        src: "nginx-site.conf.j2"
-        dest: "/etc/nginx/sites-available/{{ app_name }}"
-        owner: root
-        group: root
-        mode: "0644"
+    - name: Configure nginx performance (gzip, cache, upstream)
+      include_tasks: tasks/nginx-site.yml
 
     - name: Enable SSL nginx configs
       file:
         src: "/etc/nginx/sites-available/{{ app_name }}"
         dest: "/etc/nginx/sites-enabled/{{ app_name }}"
         state: link
-
-    - name: Test nginx configuration
-      command: nginx -t
-      register: nginx_test
-      changed_when: false
-
-    - name: Fail if nginx config is invalid
-      fail:
-        msg: "Nginx configuration test failed: {{ nginx_test.stderr }}"
-      when: nginx_test.rc != 0
-
-    - name: Reload nginx
-      systemd:
-        name: nginx
-        state: reloaded
 
     - name: Setup SSL auto-renewal cron job
       cron:

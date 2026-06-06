@@ -3,9 +3,9 @@ import { HeroCampLogo } from './HeroCampLogo'
 import { MagneticCtaButton } from './MagneticCtaButton'
 
 const HERO_VIDEO_SRC = '/videos/RecapVerticalLaoHiphop3.mp4'
+const HERO_POSTER_SRC = '/images/hero-poster.jpg'
 
 export function HeroSection() {
-  const videoRef = React.useRef<HTMLVideoElement>(null)
   const [videoFailed, setVideoFailed] = React.useState(false)
 
   return (
@@ -14,25 +14,24 @@ export function HeroSection() {
       aria-label="Fanglao Summer Camp & Jam 2026"
       className="relative flex min-h-[calc(100dvh-4rem)] scroll-mt-18 items-center justify-center overflow-hidden px-4 py-16 md:min-h-[calc(100dvh-3.5rem)] md:py-20"
     >
+      <div aria-hidden className="hero-fallback-bg absolute inset-0" data-active />
+
       {!videoFailed ? (
         <video
-          ref={videoRef}
+          poster={HERO_POSTER_SRC}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
+          // @ts-expect-error fetchPriority is valid on <video> in HTML; React types omit it
+          fetchPriority="high"
           className="absolute inset-0 size-full object-cover"
           onError={() => setVideoFailed(true)}
         >
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
       ) : null}
-
-      <div
-        aria-hidden
-        className="hero-fallback-bg absolute inset-0"
-        data-active={videoFailed || undefined}
-      />
 
       <div
         aria-hidden

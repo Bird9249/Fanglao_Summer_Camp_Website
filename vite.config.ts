@@ -17,6 +17,6 @@ export default defineConfig({
       srcDirectory: 'src',
     }),
     viteReact(),
-    nitro({preset: "bun"}),
+    nitro({ preset: 'bun' }),
   ],
 })

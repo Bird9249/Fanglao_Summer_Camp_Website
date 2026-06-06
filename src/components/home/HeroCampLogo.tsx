@@ -2,10 +2,7 @@ import { CampLogo } from '~/components/brand/CampLogo'
 
 export function HeroCampLogo() {
   return (
-    <div
-      className="hero-reveal-line flex w-full justify-center"
-      style={{ animationDelay: '60ms' }}
-    >
+    <div className="flex w-full justify-center">
       <CampLogo size="hero" priority />
     </div>
   )

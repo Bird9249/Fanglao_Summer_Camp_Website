@@ -17,7 +17,15 @@ export const Route = createFileRoute('/_site/')({
 
     return {
       meta,
-      links,
+      links: [
+        ...links,
+        {
+          rel: 'preload',
+          as: 'image',
+          href: '/images/hero-poster.jpg',
+          fetchPriority: 'high',
+        },
+      ],
       scripts: [
         {
           type: 'application/ld+json',

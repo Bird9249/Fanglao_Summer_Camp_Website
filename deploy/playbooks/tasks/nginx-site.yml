@@ -1,0 +1,38 @@
+- name: Ensure nginx HTML cache directory exists
+  file:
+    path: /var/cache/nginx/{{ app_name }}
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Install nginx HTTP cache + upstream snippet
+  template:
+    src: nginx-http-cache.conf.j2
+    dest: /etc/nginx/conf.d/{{ app_name }}-cache.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Update nginx site config
+  template:
+    src: nginx-site.conf.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Test nginx configuration
+  command: nginx -t
+  register: nginx_test
+  changed_when: false
+
+- name: Fail if nginx config is invalid
+  fail:
+    msg: "Nginx configuration test failed: {{ nginx_test.stderr }}"
+  when: nginx_test.rc != 0
+
+- name: Reload nginx
+  systemd:
+    name: nginx
+    state: reloaded

@@ -23,7 +23,8 @@ export function CampLogo({
       width={640}
       height={640}
       className={cn('h-auto w-full object-contain', sizeClasses[size], className)}
-      decoding="async"
+      decoding={priority ? 'sync' : 'async'}
+      loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
     />
   )

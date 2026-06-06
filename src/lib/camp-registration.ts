@@ -79,8 +79,7 @@ const campRegistrationBaseSchema = z.object({
     .min(1, 'ກະລຸນາເລືອກວັນເດືອນປີເກີດ')
     .refine((value) => parseBirthDate(value) !== null, 'ວັນເດືອນປີເກີດບໍ່ຖືກຕ້ອງ'),
   gender: z.enum(campGenderIds, {
-    required_error: 'ກະລຸນາເລືອກເພດ',
-    invalid_type_error: 'ກະລຸນາເລືອກເພດ',
+    message: 'ກະລຸນາເລືອກເພດ',
   }),
   genderOther: z.string().trim().max(50, 'ລາຍລະອຽດເພດຍາວເກີນໄປ').optional(),
   phone: z

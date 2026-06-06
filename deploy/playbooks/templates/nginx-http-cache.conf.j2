@@ -1,0 +1,7 @@
+# HTTP-level upstream + cache zone for Summer Camp 2026 (included from conf.d)
+upstream summer_camp_backend {
+    server 127.0.0.1:{{ port }};
+    keepalive 16;
+}
+
+proxy_cache_path /var/cache/nginx/{{ app_name }} levels=1:2 keys_zone=summer_camp_html:16m max_size=128m inactive=10m use_temp_path=off;
