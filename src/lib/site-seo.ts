@@ -1,3 +1,7 @@
+import { createIsomorphicFn } from '@tanstack/react-start'
+
+declare const __BAKED_SITE_URL__: string
+
 export const siteSeoConfig = {
   siteName: 'Fanglao Studio',
   defaultTitle: 'Fanglao Summer Dance Camp & Jam 2026',
@@ -16,14 +20,41 @@ export const publicSiteRoutes = [
   { path: '/register/jam', changefreq: 'monthly', priority: '0.7' },
 ] as const
 
-export function getSiteUrl() {
-  const raw =
-    process.env.SITE_URL ??
-    process.env.BETTER_AUTH_URL ??
-    process.env.VITE_APP_URL ??
-    'http://localhost:3001'
+const resolveRequestOrigin = createIsomorphicFn()
+  .server(() => {
+    const { getRequestUrl } = require('@tanstack/react-start/server') as typeof import('@tanstack/react-start/server')
+    const url = new URL(getRequestUrl())
+    if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+      return undefined
+    }
+    return url.origin
+  })
+  .client(() => undefined)
 
-  return raw.replace(/\/$/, '')
+function readEnvSiteUrl() {
+  const baked =
+    typeof __BAKED_SITE_URL__ === 'string' && __BAKED_SITE_URL__
+      ? __BAKED_SITE_URL__
+      : undefined
+
+  return (
+    baked ||
+    import.meta.env.SITE_URL ||
+    import.meta.env.BETTER_AUTH_URL ||
+    process.env.SITE_URL ||
+    process.env.BETTER_AUTH_URL ||
+    process.env.VITE_APP_URL
+  )
+}
+
+export function getSiteUrl() {
+  const fromEnv = readEnvSiteUrl()
+  if (fromEnv) return fromEnv.replace(/\/$/, '')
+
+  const fromRequest = resolveRequestOrigin()
+  if (fromRequest) return fromRequest
+
+  return 'http://localhost:3001'
 }
 
 export function toAbsoluteUrl(path: string, siteUrl = getSiteUrl()) {

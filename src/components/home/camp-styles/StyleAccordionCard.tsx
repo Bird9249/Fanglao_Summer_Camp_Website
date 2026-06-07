@@ -38,7 +38,12 @@ export function StyleAccordionCard({
         'style-accordion-card group relative w-full overflow-hidden rounded-2xl border border-border/70 bg-card text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
         accordionMode
           ? 'style-accordion-card--flex h-full min-h-[28rem] min-w-0'
-          : 'min-h-[17rem] sm:min-h-[19rem]',
+          : [
+              'style-accordion-card--carousel shrink-0 snap-center',
+              'w-[min(76vw,17.5rem)] min-h-[11.5rem]',
+              'md:w-[min(46vw,22rem)] md:min-h-[13rem]',
+              'lg:w-[min(36vw,24rem)] lg:min-h-[14rem]',
+            ],
         accordionMode && anyExpanded && !expanded && 'style-accordion-card--dimmed',
         className,
       )}
@@ -46,12 +51,21 @@ export function StyleAccordionCard({
       onFocus={accordionMode ? onHover : undefined}
       onClick={onSelect}
     >
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent" />
+      <div
+        className={cn(
+          'absolute inset-0',
+          accordionMode
+            ? 'bg-gradient-to-t from-background via-background/25 to-transparent'
+            : 'bg-gradient-to-r from-background via-background/80 to-background/20',
+        )}
+      />
 
       <div
         className={cn(
-          'absolute inset-x-0 bottom-0 transition-[height] duration-500 ease-out',
-          accordionMode ? 'h-[88%]' : 'h-[55%] sm:h-[58%]',
+          'absolute transition-[height,width,inset] duration-500 ease-out',
+          accordionMode
+            ? 'inset-x-0 bottom-0 h-[88%]'
+            : 'right-0 top-0 bottom-0 w-[42%] md:w-[44%]',
         )}
       >
         <img
@@ -62,7 +76,7 @@ export function StyleAccordionCard({
             showExpandedContent && accordionMode
               ? 'style-accordion-silhouette--hidden'
               : 'style-accordion-silhouette--visible',
-            !accordionMode && 'opacity-90',
+            !accordionMode && 'opacity-95',
           )}
         />
 
@@ -76,6 +90,7 @@ export function StyleAccordionCard({
               : accordionMode
                 ? 'style-accordion-photo--hidden'
                 : 'style-accordion-photo--visible',
+            !accordionMode && 'scale-105 md:scale-100',
           )}
         />
       </div>
@@ -95,12 +110,15 @@ export function StyleAccordionCard({
       <div
         className={cn(
           'relative z-10 flex h-full flex-col justify-between',
-          accordionMode ? 'p-4 md:p-5' : 'p-4 sm:p-5',
+          accordionMode
+            ? 'p-4 md:p-5'
+            : 'w-[58%] max-w-[58%] p-3.5 md:w-[56%] md:max-w-[56%] md:p-4 lg:p-5',
         )}
       >
         <div className="flex flex-col gap-2">
-          <span className="flex size-9 items-center justify-center rounded-lg border border-primary/30 bg-background/50 text-primary backdrop-blur-sm sm:size-10">
-            <Icon size={20} />
+          <span className="flex size-8 items-center justify-center rounded-lg border border-primary/30 bg-background/55 text-primary backdrop-blur-sm md:size-9 lg:size-10">
+            <Icon size={18} className="md:hidden" />
+            <Icon size={20} className="hidden md:block" />
           </span>
           <div
             className={cn(
@@ -108,10 +126,12 @@ export function StyleAccordionCard({
               !showCollapsedTitle && 'style-accordion-title--hidden',
             )}
           >
-            <p className="font-heading text-sm font-bold uppercase tracking-wide sm:text-base">
+            <p className="font-heading text-[0.8rem] font-bold uppercase leading-tight tracking-wide md:text-sm lg:text-base">
               {style.name}
             </p>
-            <p className="text-xs text-muted-foreground sm:text-sm">{style.lao}</p>
+            <p className="text-[0.7rem] text-muted-foreground md:text-xs lg:text-sm">
+              {style.lao}
+            </p>
           </div>
         </div>
 
@@ -123,13 +143,20 @@ export function StyleAccordionCard({
               : 'style-accordion-details--hidden',
           )}
         >
-          <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-primary sm:text-xs">
+          <p className="text-[0.62rem] font-semibold uppercase tracking-widest text-primary md:text-[0.68rem] lg:text-xs">
             {style.tagline}
           </p>
-          <p className="line-clamp-2 text-xs text-foreground/90 sm:line-clamp-3">
+          <p className="line-clamp-2 text-[0.68rem] text-foreground/90 md:line-clamp-3 md:text-xs">
             {style.description}
           </p>
-          <p className="text-xs text-muted-foreground">{style.schedule}</p>
+          <p className="text-[0.68rem] text-muted-foreground md:text-xs">
+            {style.schedule}
+          </p>
+          {!accordionMode ? (
+            <p className="mt-0.5 text-[0.62rem] font-medium text-primary/80 md:text-[0.68rem]">
+              ແຕະເພື່ອເບິ່ງວິດີໂອ →
+            </p>
+          ) : null}
         </div>
       </div>
     </button>

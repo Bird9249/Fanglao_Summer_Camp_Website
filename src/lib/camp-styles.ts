@@ -32,7 +32,7 @@ export const campStyles: CampStyle[] = [
       'ພື້ນຖານການເຄື່ອນໄຫວ ແລະຈັງຫວະສຳລັບເດັກນ້ອຍ ສ້າງຄວາມມັ່ນໃຈ ແລະຄວາມມ່ວນຊື່ນຜ່ານດົນຕີແລະເຕັ້ນ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງເຊົ້າ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '09:00 – 11:00', group: 'Kids 5–12' },
+      { days: 'Mon–Fri', time: '13:00 – 14:30', group: 'Kids 5–12' },
     ],
     icon: RiStarSmileLine,
     silhouetteSrc: '/images/camp-styles/kid.png',
@@ -49,7 +49,7 @@ export const campStyles: CampStyle[] = [
       'K-Pop choreography ແລະ performance style — ຮຽນທ່າທັນສະໄໝ ແລະການເຕັ້ນບນເວທີ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງບ່າຍ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '13:00 – 15:00', group: 'Teens & Adults' },
+      { days: 'Mon–Fri', time: '15:00 – 16:30', group: 'Teens & Adults' },
     ],
     icon: RiMusic2Line,
     silhouetteSrc: '/images/camp-styles/kpop.png',
@@ -66,7 +66,7 @@ export const campStyles: CampStyle[] = [
       'Jazz technique ຜົນປະສົມກັບ street dance — ພลัง ແລະສໄຕລ໌ທີ່ຄມຊັດ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງບ່າຍ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '15:00 – 17:00', group: 'All levels' },
+      { days: 'Mon–Fri', time: '16:30 – 18:00', group: 'All levels' },
     ],
     icon: RiSparklingLine,
     silhouetteSrc: '/images/camp-styles/jazz.png',
@@ -83,7 +83,7 @@ export const campStyles: CampStyle[] = [
       'Hip-Hop fundamentals ແລະ freestyle sessions — ຮຽນພື້ນຖານ ແລະສ້າງສไตล์ຂອງຕົນເອງ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງແລງ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '17:00 – 19:00', group: 'Teens & Adults' },
+      { days: 'Mon–Fri', time: '13:00 – 14:30', group: 'Teens & Adults' },
     ],
     icon: RiMic2Line,
     silhouetteSrc: '/images/camp-styles/hiphop.png',
@@ -100,7 +100,7 @@ export const campStyles: CampStyle[] = [
       'Toprock, footwork, power moves ແລະ freezes — ສຳລັບຜູ້ທີ່ຕ້ອງການ Breaking ແບບຈິງຈັງ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງແລງ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '19:00 – 21:00', group: 'Intermediate+' },
+      { days: 'Mon–Fri', time: '15:00 – 16:30', group: 'Intermediate+' },
     ],
     icon: RiBoxingLine,
     silhouetteSrc: '/images/camp-styles/breaking.png',
@@ -113,23 +113,76 @@ export const campStyles: CampStyle[] = [
 const classNameToStyleId: Record<string, string> = {
   'kids class': 'kids',
   kids: 'kids',
+  kid: 'kids',
+  'ເດັກນ້ອຍ': 'kids',
+  'ຄລາສເດັກນ້ອຍ': 'kids',
   'k-pop class': 'kpop',
   'k-pop': 'kpop',
   kpop: 'kpop',
+  'k pop': 'kpop',
   'street jazz': 'street-jazz',
+  'street jazz class': 'street-jazz',
   'hip-hop class': 'hip-hop',
   'hip-hop': 'hip-hop',
   'hip hop': 'hip-hop',
+  hiphop: 'hip-hop',
   breaking: 'breaking',
   'breaking class': 'breaking',
+  bboy: 'breaking',
+  'b-boy': 'breaking',
+}
+
+function normalizeClassLookupKey(value: string) {
+  return value.trim().toLowerCase().replace(/\s+class$/i, '')
+}
+
+function findCampStyleByLookupKey(key: string): CampStyle | undefined {
+  const styleId =
+    classNameToStyleId[key] ?? classNameToStyleId[normalizeClassLookupKey(key)]
+  if (!styleId) return undefined
+  return campStyles.find((style) => style.id === styleId)
 }
 
 export function findCampStyleForClassName(name: string): CampStyle | undefined {
-  const key = name.trim().toLowerCase().replace(/\s+class$/i, '')
-  const styleId =
-    classNameToStyleId[key] ?? classNameToStyleId[name.trim().toLowerCase()]
-  if (!styleId) return undefined
-  return campStyles.find((style) => style.id === styleId)
+  const trimmed = name.trim()
+  if (!trimmed) return undefined
+
+  const direct = findCampStyleByLookupKey(trimmed.toLowerCase())
+  if (direct) return direct
+
+  const normalized = normalizeClassLookupKey(trimmed)
+  const normalizedMatch = findCampStyleByLookupKey(normalized)
+  if (normalizedMatch) return normalizedMatch
+
+  return campStyles.find((style) => {
+    const candidates = [style.id, style.name, style.lao].map(normalizeClassLookupKey)
+    return (
+      candidates.includes(normalized) ||
+      candidates.some(
+        (candidate) =>
+          normalized.includes(candidate) || candidate.includes(normalized),
+      )
+    )
+  })
+}
+
+/** ຈັບຄູ່ຮູບ/icon ຈາກຊື່ຄລາສ admin + ຊື່ສະແດງຜົນລາວ */
+export function findCampStyleForClass(item: {
+  name: string
+  labelLao?: string
+}): CampStyle | undefined {
+  const byName = findCampStyleForClassName(item.name)
+  if (byName) return byName
+
+  const lao = item.labelLao?.trim()
+  if (!lao) return undefined
+
+  const byLao = findCampStyleForClassName(lao)
+  if (byLao) return byLao
+
+  return campStyles.find(
+    (style) => style.lao.localeCompare(lao, 'lo', { sensitivity: 'base' }) === 0,
+  )
 }
 
 export function resolveClassTypeIdFromSlug(

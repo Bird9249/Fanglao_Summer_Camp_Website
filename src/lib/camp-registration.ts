@@ -88,13 +88,32 @@ const campRegistrationBaseSchema = z.object({
     .min(8, 'ກະລຸນາກອກເບີໂທທີ່ຖືກຕ້ອງ')
     .max(20, 'ເບີໂທຍາວເກີນໄປ')
     .regex(/^[\d\s+\-()]+$/, 'ເບີໂທຕ້ອງເປັນຕົວເລກເທົ່ານັ້ນ'),
-  classTypeIds: z
-    .array(z.string().min(1))
-    .min(1, 'ກະລຸນາເລືອກຢ່າງໜ້ອຍ 1 ຄລາສ'),
+  classTypeIds: z.array(z.string().min(1)).default([]),
+  waitlistClassTypeIds: z.array(z.string().min(1)).default([]),
 })
 
 export const campRegistrationSchema = campRegistrationBaseSchema
   .superRefine((data, ctx) => {
+    if (
+      data.classTypeIds.length + (data.waitlistClassTypeIds?.length ?? 0) < 1
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'ກະລຸນາເລືອກຢ່າງໜ້ອຍ 1 ຄລາສ ຫຼື ລົງຄິວສຳຮອງ',
+        path: ['classTypeIds'],
+      })
+    }
+
+    const waitlistSet = new Set(data.waitlistClassTypeIds ?? [])
+    for (const id of waitlistSet) {
+      if (data.classTypeIds.includes(id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'ຄລາສຄິວສຳຮອງຕ້ອງແຍກຈາກຄລາສທີ່ຈອງໄດ້',
+          path: ['waitlistClassTypeIds'],
+        })
+      }
+    }
     const birthDate = parseBirthDate(data.dateOfBirth)
     if (!birthDate) return
 

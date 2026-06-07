@@ -1,3 +1,5 @@
+export type ClassAvailability = 'open' | 'low' | 'critical' | 'full'
+
 export type CampEventPublicDTO = {
   slug: string
   title: string
@@ -13,11 +15,27 @@ export type CampClassPublicDTO = {
   labelLao: string
   description: string | null
   sortOrder: number
+  capacity: number
+  claimed: number
+  remaining: number
+  availability: ClassAvailability
+  waitlistEnabled: boolean
+  waitlistRemaining: number | null
 }
 
 export type CampClassesResponse = {
   event: CampEventPublicDTO
   classes: CampClassPublicDTO[]
+}
+
+export type CampSlotsResponse = {
+  updatedAt: string
+  slots: Array<{
+    classTypeId: string
+    remaining: number
+    availability: ClassAvailability
+    waitlistOpen: boolean
+  }>
 }
 
 export type CampRegistrationSubmitInput = {
@@ -28,12 +46,20 @@ export type CampRegistrationSubmitInput = {
   genderOther?: string
   phoneNumber: string
   classTypeIds: string[]
+  waitlistClassTypeIds?: string[]
+}
+
+export type CampWaitlistEntryResult = {
+  waitlistEntryId: string
+  position: number
+  classTypeId: string
 }
 
 export type CampRegistrationSubmitResult = {
-  registrationId: string
-  status: string
-  submittedAt: string
+  registrationId: string | null
+  status: string | null
+  submittedAt: string | null
+  waitlistEntries?: CampWaitlistEntryResult[]
 }
 
 export type CampApiErrorCode =
@@ -41,6 +67,9 @@ export type CampApiErrorCode =
   | 'EVENT_NOT_FOUND'
   | 'INVALID_CLASS'
   | 'AGE_OUT_OF_RANGE'
+  | 'CLASS_FULL'
+  | 'WAITLIST_FULL'
+  | 'WAITLIST_DUPLICATE'
   | 'NETWORK'
   | 'UNKNOWN'
 
@@ -63,6 +92,30 @@ export function campPublicHeaders(): HeadersInit {
   return headers
 }
 
+async function parseCampApiError(
+  res: Response,
+): Promise<{ code: CampApiErrorCode; status: number }> {
+  const body = (await res.json().catch(() => ({}))) as { error?: string }
+
+  if (res.status === 403 && body.error === 'EVENT_NOT_OPEN') {
+    return { code: 'EVENT_NOT_OPEN', status: 403 }
+  }
+  if (res.status === 404) {
+    return { code: 'EVENT_NOT_FOUND', status: 404 }
+  }
+  if (res.status === 409 && body.error === 'CLASS_FULL') {
+    return { code: 'CLASS_FULL', status: 409 }
+  }
+  if (res.status === 422) {
+    const code =
+      typeof body.error === 'string'
+        ? (body.error as CampApiErrorCode)
+        : 'UNKNOWN'
+    return { code, status: 422 }
+  }
+  return { code: 'UNKNOWN', status: res.status }
+}
+
 export async function fetchCampClasses(): Promise<
   | { ok: true; data: CampClassesResponse }
   | { ok: false; code: CampApiErrorCode; status?: number }
@@ -75,24 +128,36 @@ export async function fetchCampClasses(): Promise<
       cache: 'no-store',
     })
 
-    if (res.status === 403) {
-      const body = (await res.json().catch(() => ({}))) as {
-        error?: string
-      }
-      if (body.error === 'EVENT_NOT_OPEN') {
-        return { ok: false, code: 'EVENT_NOT_OPEN', status: 403 }
-      }
-    }
-
-    if (res.status === 404) {
-      return { ok: false, code: 'EVENT_NOT_FOUND', status: 404 }
-    }
-
     if (!res.ok) {
-      return { ok: false, code: 'UNKNOWN', status: res.status }
+      const err = await parseCampApiError(res)
+      return { ok: false, ...err }
     }
 
     const data = (await res.json()) as CampClassesResponse
+    return { ok: true, data }
+  } catch {
+    return { ok: false, code: 'NETWORK' }
+  }
+}
+
+export async function fetchCampSlots(): Promise<
+  | { ok: true; data: CampSlotsResponse }
+  | { ok: false; code: CampApiErrorCode; status?: number }
+> {
+  const { baseUrl, slug } = campApiConfig()
+
+  try {
+    const res = await fetch(`${baseUrl}/api/public/camp/${slug}/slots`, {
+      headers: campPublicHeaders(),
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      const err = await parseCampApiError(res)
+      return { ok: false, ...err }
+    }
+
+    const data = (await res.json()) as CampSlotsResponse
     return { ok: true, data }
   } catch {
     return { ok: false, code: 'NETWORK' }
@@ -130,19 +195,20 @@ export async function submitCampRegistration(
       unknown
     >
 
-    if (res.status === 403 && body.error === 'EVENT_NOT_OPEN') {
-      return { ok: false, code: 'EVENT_NOT_OPEN', status: 403 }
-    }
-
-    if (res.status === 422) {
-      const code =
-        typeof body.error === 'string'
-          ? (body.error as CampApiErrorCode)
-          : 'UNKNOWN'
-      return { ok: false, code, status: 422 }
-    }
-
     if (!res.ok) {
+      if (res.status === 403 && body.error === 'EVENT_NOT_OPEN') {
+        return { ok: false, code: 'EVENT_NOT_OPEN', status: 403 }
+      }
+      if (res.status === 409 && body.error === 'CLASS_FULL') {
+        return { ok: false, code: 'CLASS_FULL', status: 409 }
+      }
+      if (res.status === 422) {
+        const code =
+          typeof body.error === 'string'
+            ? (body.error as CampApiErrorCode)
+            : 'UNKNOWN'
+        return { ok: false, code, status: 422 }
+      }
       return { ok: false, code: 'UNKNOWN', status: res.status }
     }
 

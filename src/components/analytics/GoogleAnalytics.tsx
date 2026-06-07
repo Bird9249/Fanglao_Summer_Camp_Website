@@ -1,6 +1,6 @@
 import { useRouterState } from '@tanstack/react-router'
 import * as React from 'react'
-import { initGoogleAnalytics, trackPageView } from '~/lib/analytics'
+import { trackPageView, waitForGoogleAnalytics } from '~/lib/analytics'
 
 export function GoogleAnalytics() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
@@ -12,7 +12,7 @@ export function GoogleAnalytics() {
     let cancelled = false
     const pagePath = searchStr ? `${pathname}${searchStr}` : pathname
 
-    void initGoogleAnalytics().then(() => {
+    void waitForGoogleAnalytics().then(() => {
       if (cancelled) return
       trackPageView(pagePath)
     })

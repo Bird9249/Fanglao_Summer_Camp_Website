@@ -13,8 +13,15 @@ import {
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { trackGaEvent } from '~/lib/analytics'
-import type { CampClassPublicDTO } from '~/lib/camp-registration-api'
-import { submitCampRegistrationFn } from '~/lib/camp-registration.functions'
+import type {
+  CampClassPublicDTO,
+  CampWaitlistEntryResult,
+} from '~/lib/camp-registration-api'
+import { getCampClassDisplayName } from '~/lib/camp-class-display'
+import {
+  getCampClasses,
+  submitCampRegistrationFn,
+} from '~/lib/camp-registration.functions'
 import {
   campBirthDateBounds,
   campGenderIds,
@@ -55,8 +62,9 @@ function FormField({
 }
 
 type SuccessState = {
-  registrationId: string
+  registrationId: string | null
   data: CampRegistrationFormValues
+  waitlistEntries: CampWaitlistEntryResult[]
 }
 
 export function CampRegistrationForm({
@@ -68,6 +76,8 @@ export function CampRegistrationForm({
 }) {
   const [success, setSuccess] = React.useState<SuccessState | null>(null)
   const [submitError, setSubmitError] = React.useState<string | null>(null)
+  const [liveClasses, setLiveClasses] =
+    React.useState<CampClassPublicDTO[]>(classes)
 
   const {
     register,
@@ -91,21 +101,43 @@ export function CampRegistrationForm({
       genderOther: '',
       phone: '',
       classTypeIds: defaultClassTypeIds,
+      waitlistClassTypeIds: [],
     },
   })
 
   const selectedGender = watch('gender')
 
+  React.useEffect(() => {
+    setLiveClasses(classes)
+  }, [classes])
+
+  React.useEffect(() => {
+    if (isSubmitting) return
+
+    const refresh = async () => {
+      const result = await getCampClasses()
+      if (result.ok) {
+        setLiveClasses(result.data.classes)
+      }
+    }
+
+    const timer = window.setInterval(refresh, 20_000)
+    return () => window.clearInterval(timer)
+  }, [isSubmitting])
+
   const classLabelById = React.useMemo(() => {
     const map = new Map<string, string>()
-    for (const item of classes) {
-      map.set(item.classTypeId, item.labelLao || item.name)
+    for (const item of liveClasses) {
+      map.set(item.classTypeId, getCampClassDisplayName(item))
     }
     return map
-  }, [classes])
+  }, [liveClasses])
 
   const onSubmit = async (data: CampRegistrationFormValues) => {
     setSubmitError(null)
+
+    const waitlistIds = data.waitlistClassTypeIds ?? []
+    const allClassIds = [...data.classTypeIds, ...waitlistIds]
 
     const result = await submitCampRegistrationFn({
       data: {
@@ -115,7 +147,8 @@ export function CampRegistrationForm({
         gender: data.gender,
         genderOther: data.genderOther,
         phoneNumber: data.phone,
-        classTypeIds: data.classTypeIds,
+        classTypeIds: allClassIds,
+        waitlistClassTypeIds: waitlistIds,
       },
     })
 
@@ -140,18 +173,30 @@ export function CampRegistrationForm({
         setSubmitError('ຄລາສທີ່ເລືອກບໍ່ຖືກຕ້ອງ — ກະລຸນາໂຫຼດໜ້າໃໝ່')
         return
       }
+      if (result.code === 'CLASS_FULL') {
+        setSubmitError('ຄລາສເຕັມແລ້ວ — ກະລຸນາເລືອກໃໝ່ ຫຼື ລົງຄິວສຳຮອງ')
+        const refreshed = await getCampClasses()
+        if (refreshed.ok) setLiveClasses(refreshed.data.classes)
+        return
+      }
+      if (result.code === 'WAITLIST_FULL') {
+        setSubmitError('ຄິວສຳຮອງເຕັມແລ້ວ — ກະລຸນາເລືອກຄລາສອື່ນ')
+        return
+      }
       setSubmitError('ສົ່ງແບບຟອມບໍ່ສຳເລັດ — ກະລຸນາລອງໃໝ່')
       return
     }
 
     trackGaEvent('camp_register_submit', {
-      class_count: data.classTypeIds.length,
-      classes: data.classTypeIds.join(','),
+      class_count: allClassIds.length,
+      classes: allClassIds.join(','),
+      waitlist_count: waitlistIds.length,
     })
 
     setSuccess({
       registrationId: result.data.registrationId,
       data,
+      waitlistEntries: result.data.waitlistEntries ?? [],
     })
   }
 
@@ -165,6 +210,7 @@ export function CampRegistrationForm({
       genderOther: '',
       phone: '',
       classTypeIds: defaultClassTypeIds,
+      waitlistClassTypeIds: [],
     })
   }
 
@@ -174,9 +220,11 @@ export function CampRegistrationForm({
         <CampRegistrationSuccess
           registrationId={success.registrationId}
           data={success.data}
-          classLabels={success.data.classTypeIds.map(
-            (id) => classLabelById.get(id) ?? id,
-          )}
+          classLabels={[
+            ...success.data.classTypeIds,
+            ...(success.data.waitlistClassTypeIds ?? []),
+          ].map((id) => classLabelById.get(id) ?? id)}
+          waitlistEntries={success.waitlistEntries}
           onRegisterAgain={handleRegisterAgain}
         />
       ) : null}
@@ -342,13 +390,21 @@ export function CampRegistrationForm({
           <Controller
             name="classTypeIds"
             control={control}
-            render={({ field }) => (
-              <CampClassSelector
-                classes={classes}
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.classTypeIds?.message}
-                disabled={isSubmitting}
+            render={({ field: classField }) => (
+              <Controller
+                name="waitlistClassTypeIds"
+                control={control}
+                render={({ field: waitlistField }) => (
+                  <CampClassSelector
+                    classes={liveClasses}
+                    value={classField.value ?? []}
+                    waitlistIds={waitlistField.value ?? []}
+                    onChange={classField.onChange}
+                    onWaitlistChange={waitlistField.onChange}
+                    error={errors.classTypeIds?.message}
+                    disabled={isSubmitting}
+                  />
+                )}
               />
             )}
           />

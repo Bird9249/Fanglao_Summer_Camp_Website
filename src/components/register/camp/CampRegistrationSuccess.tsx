@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import type { CampWaitlistEntryResult } from '~/lib/camp-registration-api'
 import {
   formatBirthDateLao,
   formatGenderDisplay,
@@ -16,9 +17,10 @@ import {
 } from '~/lib/camp-registration'
 
 type CampRegistrationSuccessProps = {
-  registrationId: string
+  registrationId: string | null
   data: CampRegistrationFormValues
   classLabels: string[]
+  waitlistEntries?: CampWaitlistEntryResult[]
   onRegisterAgain: () => void
 }
 
@@ -41,8 +43,11 @@ export function CampRegistrationSuccess({
   registrationId,
   data,
   classLabels,
+  waitlistEntries = [],
   onRegisterAgain,
 }: CampRegistrationSuccessProps) {
+  const waitlistOnly =
+    !registrationId && waitlistEntries.length > 0
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
@@ -132,10 +137,12 @@ export function CampRegistrationSuccess({
                 id="camp-reg-success-title"
                 className="w-full text-center font-heading text-2xl uppercase"
               >
-                ສົ່ງແບບຟອມສຳເລັດ!
+                {waitlistOnly ? 'ລົງຄິວສຳຮອງສຳເລັດ!' : 'ສົ່ງແບບຟອມສຳເລັດ!'}
               </CardTitle>
               <CardDescription className="mt-2 max-w-md text-center text-base">
-                ຂໍຂອບໃຈທີ່ສະໝັກ Summer Dance Camp — ທີມງານຈະຕິດຕໍ່ກັບຄືນໃນໄວໆນີ້
+                {waitlistOnly
+                  ? 'ທ່ານຢູ່ໃນຄິວສຳຮອງ — ທີມງານຈະຕິດຕໍ່ເມື່ອມີທີ່ນັ່ງວ່າງ'
+                  : 'ຂໍຂອບໃຈທີ່ສະໝັກ Summer Dance Camp — ທີມງານຈະຕິດຕໍ່ກັບຄືນໃນໄວໆນີ້'}
               </CardDescription>
             </div>
           </CardHeader>
@@ -151,17 +158,41 @@ export function CampRegistrationSuccess({
               </p>
             </div>
 
-            <div className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-center">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                ລະຫັດອ້າງອິງ
-              </p>
-              <p className="font-mono text-xl font-bold text-primary">
-                {registrationId}
-              </p>
-              <p className="mt-1 text-muted-foreground text-xs">
-                ກະລຸນາເກັບລະຫັດນີ້ໄວ້ເວລາຕິດຕໍ່ທີມງານ
-              </p>
-            </div>
+            {registrationId ? (
+              <div className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-center">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  ລະຫັດອ້າງອິງ
+                </p>
+                <p className="font-mono text-xl font-bold text-primary">
+                  {registrationId}
+                </p>
+                <p className="mt-1 text-muted-foreground text-xs">
+                  ກະລຸນາເກັບລະຫັດນີ້ໄວ້ເວລາຕິດຕໍ່ທີມງານ
+                </p>
+              </div>
+            ) : null}
+
+            {waitlistEntries.length > 0 ? (
+              <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 p-4">
+                <p className="font-semibold text-amber-800 dark:text-amber-300">
+                  ຄິວສຳຮອງ
+                </p>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {(data.waitlistClassTypeIds ?? []).map((classTypeId, index) => {
+                    const entry = waitlistEntries.find(
+                      (item) => item.classTypeId === classTypeId,
+                    )
+                    return (
+                      <li key={classTypeId}>
+                        {classLabels[data.classTypeIds.length + index] ??
+                          classTypeId}{' '}
+                        — ຄິວ #{entry?.position ?? '…'}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ) : null}
 
             <div className="rounded-xl border border-border/70 bg-muted/30 p-4">
               <p>

@@ -5,8 +5,24 @@ declare global {
   }
 }
 
+declare const __BAKED_GA_MEASUREMENT_ID__: string
+
+function readGaMeasurementIdFromEnv() {
+  const baked =
+    typeof __BAKED_GA_MEASUREMENT_ID__ === 'string' &&
+    __BAKED_GA_MEASUREMENT_ID__
+      ? __BAKED_GA_MEASUREMENT_ID__
+      : undefined
+
+  return (
+    baked ||
+    import.meta.env.GA_MEASUREMENT_ID ||
+    process.env.GA_MEASUREMENT_ID
+  )?.trim()
+}
+
 export function getGaMeasurementId(): string | undefined {
-  const id = process.env.GA_MEASUREMENT_ID?.trim()
+  const id = readGaMeasurementIdFromEnv()
   if (!id) return undefined
   if (!/^G-[A-Z0-9]+$/i.test(id)) return undefined
   return id
@@ -17,48 +33,55 @@ export function shouldLoadGoogleAnalytics(): boolean {
   return !!getGaMeasurementId() && !import.meta.env.DEV
 }
 
-let gaInitPromise: Promise<void> | null = null
+type HeadScript = {
+  src?: string
+  async?: boolean
+  children?: string
+  type?: string
+}
 
-/** โหลด gtag หลัง paint — ลด forced reflow ตอน first load */
-export function initGoogleAnalytics(): Promise<void> {
+/** gtag ใน <head> — SEO crawlers ตรวจจับได้ และไม่บล็อก render (async) */
+export function getGoogleAnalyticsHeadScripts(): HeadScript[] {
+  const measurementId = getGaMeasurementId()
+  if (!measurementId || import.meta.env.DEV) return []
+
+  return [
+    {
+      src: `https://www.googletagmanager.com/gtag/js?id=${measurementId}`,
+      async: true,
+    },
+    {
+      children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${measurementId}',{send_page_view:false});`,
+    },
+  ]
+}
+
+let gaReadyPromise: Promise<void> | null = null
+
+/** รอจน gtag พร้อม (จาก script ใน head) */
+export function waitForGoogleAnalytics(): Promise<void> {
   if (!shouldLoadGoogleAnalytics()) return Promise.resolve()
   if (typeof window === 'undefined') return Promise.resolve()
-  if (gaInitPromise) return gaInitPromise
+  if (typeof window.gtag === 'function') return Promise.resolve()
+  if (gaReadyPromise) return gaReadyPromise
 
-  const measurementId = getGaMeasurementId()
-  if (!measurementId) return Promise.resolve()
-
-  gaInitPromise = new Promise((resolve) => {
-    const bootstrap = () => {
-      window.dataLayer = window.dataLayer ?? []
-      window.gtag = function gtag(...args: unknown[]) {
-        window.dataLayer?.push(args)
+  gaReadyPromise = new Promise((resolve) => {
+    const started = Date.now()
+    const check = () => {
+      if (typeof window.gtag === 'function') {
+        resolve()
+        return
       }
-      window.gtag('js', new Date())
-      window.gtag('config', measurementId, { send_page_view: false })
-
-      const script = document.createElement('script')
-      script.async = true
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`
-      script.onload = () => resolve()
-      script.onerror = () => resolve()
-      document.head.appendChild(script)
+      if (Date.now() - started > 5000) {
+        resolve()
+        return
+      }
+      window.requestAnimationFrame(check)
     }
-
-    const schedule =
-      'requestIdleCallback' in window
-        ? (cb: () => void) =>
-            window.requestIdleCallback(cb, { timeout: 4000 })
-        : (cb: () => void) => window.setTimeout(cb, 1500)
-
-    if (document.readyState === 'complete') {
-      schedule(bootstrap)
-    } else {
-      window.addEventListener('load', () => schedule(bootstrap), { once: true })
-    }
+    check()
   })
 
-  return gaInitPromise
+  return gaReadyPromise
 }
 
 function gtagSafe(...args: unknown[]) {

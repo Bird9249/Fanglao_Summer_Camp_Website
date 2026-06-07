@@ -10,7 +10,10 @@ import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
 import { GoogleAnalytics } from '~/components/analytics/GoogleAnalytics'
-import { shouldLoadGoogleAnalytics } from '~/lib/analytics'
+import {
+  getGoogleAnalyticsHeadScripts,
+  shouldLoadGoogleAnalytics,
+} from '~/lib/analytics'
 import { criticalFontPreloadLinks } from '~/lib/critical-fonts'
 import { siteSeoConfig } from '~/lib/site-seo'
 
@@ -22,6 +25,8 @@ const rootHeadLinks = [
     ? [{ rel: 'preconnect', href: 'https://www.googletagmanager.com' } as const]
     : []),
 ]
+
+const googleAnalyticsHeadScripts = getGoogleAnalyticsHeadScripts()
 
 export const Route = createRootRoute({
   head: () => ({
@@ -59,6 +64,7 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/site.webmanifest', color: '#ffffff' },
       { rel: 'icon', href: '/favicon.ico' },
     ],
+    scripts: googleAnalyticsHeadScripts,
   }),
   errorComponent: DefaultCatchBoundary,
   notFoundComponent: () => <NotFound />,

@@ -6,6 +6,7 @@ import {
 } from '@remixicon/react'
 import { CampLogo } from '~/components/brand/CampLogo'
 import type { CampClassPublicDTO } from '~/lib/camp-registration-api'
+import { getCampClassDisplayName } from '~/lib/camp-class-display'
 import { CAMP_MAX_AGE, CAMP_MIN_AGE } from '~/lib/camp-registration'
 import { siteMeta } from '~/components/layout/nav'
 
@@ -53,7 +54,7 @@ export function CampRegisterHero({
                     key={item.classTypeId}
                     className="rounded-full border border-primary/30 bg-background/50 px-2.5 py-1 text-xs font-medium text-foreground"
                   >
-                    {item.name.replace(' Class', '')}
+                    {getCampClassDisplayName(item)}
                   </span>
                 ))}
               </div>
