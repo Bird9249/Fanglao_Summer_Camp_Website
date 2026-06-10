@@ -6,6 +6,7 @@ export type NavSection = {
 export const mainNav: NavSection[] = [
   { sectionId: 'hero-section', label: 'ຫນ້າຫຼັກ' },
   { sectionId: 'camp-styles', label: 'Summer Camp' },
+  { sectionId: 'camp-schedule', label: 'ຕາຕະລາງ' },
   { sectionId: 'jam-event', label: 'Fanglao Jam' },
   { sectionId: 'contact', label: 'ຕິດຕໍ່' },
 ]

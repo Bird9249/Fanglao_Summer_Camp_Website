@@ -40,6 +40,11 @@
     state: restarted
     enabled: true
 
+- name: Purge nginx HTML micro-cache after deploy
+  shell: rm -rf /var/cache/nginx/{{ app_name }}/*
+  changed_when: true
+  failed_when: false
+
 - name: Wait for Website service to start
   wait_for:
     port: "{{ port }}"

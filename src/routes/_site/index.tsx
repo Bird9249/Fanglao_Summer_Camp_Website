@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { CampStylesSection } from '~/components/home/camp-styles/CampStylesSection'
+import { CampScheduleSection } from '~/components/home/schedule/CampScheduleSection'
 import { HeroSection } from '~/components/home/HeroSection'
 import { JamEventSection } from '~/components/home/jam/JamEventSection'
 import { QuickInfoSection } from '~/components/home/QuickInfoSection'
@@ -43,6 +44,7 @@ function HomePage() {
       <HeroSection />
       <QuickInfoSection />
       <CampStylesSection />
+      <CampScheduleSection />
       <JamEventSection />
     </>
   )

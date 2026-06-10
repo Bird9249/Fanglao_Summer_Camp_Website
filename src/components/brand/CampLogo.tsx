@@ -1,3 +1,4 @@
+import { campLogoSrc } from '~/lib/brand-assets'
 import { cn } from '~/lib/utils'
 
 const sizeClasses = {
@@ -18,7 +19,7 @@ export function CampLogo({
 }: CampLogoProps) {
   return (
     <img
-      src="/summer-camp-logo.png"
+      src={campLogoSrc}
       alt="Summer Dance Camp 2026 — ຮຽນເຕັ້ນພັກແລ້ງ"
       width={640}
       height={640}

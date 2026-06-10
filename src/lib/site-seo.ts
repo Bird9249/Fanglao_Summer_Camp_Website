@@ -1,4 +1,5 @@
 import { createIsomorphicFn } from '@tanstack/react-start'
+import { campLogoSrc } from '~/lib/brand-assets'
 
 declare const __BAKED_SITE_URL__: string
 
@@ -11,7 +12,7 @@ export const siteSeoConfig = {
     'Fanglao, dance camp, hip hop, breaking, k-pop, street dance, Laos, Vientiane, summer camp, battle',
   locale: 'lo_LA',
   themeColor: '#2a1f45',
-  defaultOgImagePath: '/summer-camp-logo.png',
+  defaultOgImagePath: campLogoSrc,
 } as const
 
 export const publicSiteRoutes = [

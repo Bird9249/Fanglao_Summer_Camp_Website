@@ -33,6 +33,7 @@ export const campStyles: CampStyle[] = [
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງເຊົ້າ',
     timeSlots: [
       { days: 'Mon–Fri', time: '13:00 – 14:30', group: 'Kids 5–12' },
+      { days: 'Mon–Wed (W3)', time: '13:00 – 14:30', group: 'Rehearsal' },
     ],
     icon: RiStarSmileLine,
     silhouetteSrc: '/images/camp-styles/kid.png',
@@ -49,7 +50,8 @@ export const campStyles: CampStyle[] = [
       'K-Pop choreography ແລະ performance style — ຮຽນທ່າທັນສະໄໝ ແລະການເຕັ້ນບນເວທີ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງບ່າຍ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '15:00 – 16:30', group: 'Teens & Adults' },
+      { days: 'Mon–Fri', time: '14:45 – 16:15', group: 'Teens & Adults' },
+      { days: 'Mon–Wed (W3)', time: '14:45 – 16:15', group: 'Rehearsal' },
     ],
     icon: RiMusic2Line,
     silhouetteSrc: '/images/camp-styles/kpop.png',
@@ -67,6 +69,7 @@ export const campStyles: CampStyle[] = [
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງບ່າຍ',
     timeSlots: [
       { days: 'Mon–Fri', time: '16:30 – 18:00', group: 'All levels' },
+      { days: 'Mon–Wed (W3)', time: '16:30 – 18:00', group: 'Rehearsal' },
     ],
     icon: RiSparklingLine,
     silhouetteSrc: '/images/camp-styles/jazz.png',
@@ -84,6 +87,7 @@ export const campStyles: CampStyle[] = [
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງແລງ',
     timeSlots: [
       { days: 'Mon–Fri', time: '13:00 – 14:30', group: 'Teens & Adults' },
+      { days: 'Mon–Wed (W3)', time: '13:00 – 14:30', group: 'Rehearsal' },
     ],
     icon: RiMic2Line,
     silhouetteSrc: '/images/camp-styles/hiphop.png',
@@ -100,7 +104,8 @@ export const campStyles: CampStyle[] = [
       'Toprock, footwork, power moves ແລະ freezes — ສຳລັບຜູ້ທີ່ຕ້ອງການ Breaking ແບບຈິງຈັງ',
     schedule: 'ຈັນ–ສຸກ · ຊ່ວງແລງ',
     timeSlots: [
-      { days: 'Mon–Fri', time: '15:00 – 16:30', group: 'Intermediate+' },
+      { days: 'Mon–Fri', time: '14:45 – 16:15', group: 'Intermediate+' },
+      { days: 'Mon–Wed (W3)', time: '14:45 – 16:15', group: 'Rehearsal' },
     ],
     icon: RiBoxingLine,
     silhouetteSrc: '/images/camp-styles/breaking.png',
