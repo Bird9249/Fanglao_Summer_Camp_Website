@@ -61,13 +61,13 @@ export const scheduleTabs: ScheduleTab[] = [
   {
     id: 'workshop',
     label: '16–17: Workshop',
-    labelLao: 'ເວິກຊັອບສາກົນ',
+    labelLao: 'ເວິກຊັອບກັບນັກເຕັ້ນຕ່າງປະເທດ',
     dateRange: '16 – 17 Jul',
   },
   {
     id: 'event-day',
     label: '18 Jul: Event Day',
-    labelLao: 'ວັນງານໃຫຍ່',
+    labelLao: 'ມື້ງານ',
     dateRange: '18 Jul 2026',
     isEventDay: true,
   },

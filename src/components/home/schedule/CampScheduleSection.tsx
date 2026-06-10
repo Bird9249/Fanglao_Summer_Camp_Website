@@ -46,8 +46,7 @@ export function CampScheduleSection() {
             Camp Schedule
           </h2>
           <p className="mx-auto max-w-2xl text-xs text-muted-foreground sm:text-sm">
-            ເລືອກສັບດາຫາເພື່ອເບິ່ງວັນ ເວລາ ແລະຫ້ອງ Studio — ຮຽນວັນໃດ ຊົນກັນບໍ່
-            ເຕຽມຕົວແນວໃດ
+            ຕາຕະລາງຮຽນປະຈຳອາທິດຂອງ Summer Dance Camp
           </p>
           {activeTabMeta ? (
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-primary sm:text-xs">

@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { cn } from '~/lib/utils'
+import { useLiveEventPosition } from '~/hooks/use-live-event-position'
 import {
   daysUntilEventDay,
   eventDaySlots,
   findActiveEventSlotIndex,
   getCurrentEventMinutes,
-  getLaosNow,
-  isEventDayLive,
+  getLaosNow
 } from '~/lib/camp-schedule'
-import { useLiveEventPosition } from '~/hooks/use-live-event-position'
+import { cn } from '~/lib/utils'
 
 type EventDayTimelineProps = {
   direction: 1 | -1
@@ -53,7 +52,7 @@ export function EventDayTimeline({ direction }: EventDayTimelineProps) {
     >
       {mounted && daysUntil !== null && daysUntil > 0 ? (
         <p className="mb-4 text-center text-xs font-semibold uppercase tracking-wider text-primary">
-          ອີກ {daysUntil} ວັນສູ່ວັນງານ · Lao National Circus
+          ອີກ {daysUntil} ວັນສູ່ມື້ງານ · Lao National Circus
         </p>
       ) : null}
 
