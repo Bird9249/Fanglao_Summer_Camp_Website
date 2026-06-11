@@ -4,9 +4,9 @@ import {
   RiMapPinFill,
   RiTicketFill,
 } from '@remixicon/react'
+import { useInView } from '~/hooks/use-in-view'
 import { CampCountdown } from './CampCountdown'
 import { QuickInfoCard } from './QuickInfoCard'
-import { useInView } from '~/hooks/use-in-view'
 
 export function QuickInfoSection() {
   const { ref, inView } = useInView()
@@ -59,7 +59,7 @@ export function QuickInfoSection() {
             title="Target"
             className="sm:col-span-2 lg:col-span-1"
           >
-            <p className="font-semibold text-foreground">ອາຍຸ 5–25 ປີ</p>
+            <p className="font-semibold text-foreground">ອາຍຸ 5–35 ປີ</p>
             <p>ສຳລັບ Kids ຫາ Adults</p>
             <p>ແບ່ງກຸ່ມຕາມຄລາສ ແລະລະດັບທີ່ເໝາະສົມ</p>
           </QuickInfoCard>

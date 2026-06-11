@@ -20,8 +20,8 @@ export const siteMeta = {
   brand: 'Fanglao Studio',
   tagline: 'Dance is our language',
   slogan: 'LEARN THE DANCE. UNDERSTAND THE CULTURE. EXPRESS YOURSELF.',
-  campDates: '29 ມິ.ຖ. – 17 ກ.ກ. 2026',
-  jamDate: '18 ກ.ກ. 2026',
+  campDates: '29 ມິຖຸນາ – 17 ກໍລະກົດ 2026',
+  jamDate: '18 ກໍລະກົດ 2026',
   campLocation: 'Fanglao Studio, Vientiane Center 4F',
   jamLocation: 'Lao National Circus, Vientiane',
 } as const

@@ -228,7 +228,7 @@ export function CampStylesSection() {
             id="camp-styles-heading"
             className="font-heading text-xl font-bold uppercase tracking-tight sm:text-2xl md:text-3xl"
           >
-            5 Camp Styles
+            5 Styles
           </h2>
           <p className="mx-auto max-w-2xl text-xs text-muted-foreground sm:text-sm">
             Kids · K-Pop · Street Jazz · Hip-Hop · Breaking —{' '}
