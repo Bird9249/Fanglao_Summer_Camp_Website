@@ -4,6 +4,7 @@ import { CampScheduleSection } from '~/components/home/schedule/CampScheduleSect
 import { HeroSection } from '~/components/home/HeroSection'
 import { JamEventSection } from '~/components/home/jam/JamEventSection'
 import { QuickInfoSection } from '~/components/home/QuickInfoSection'
+import { WhyJoinSection } from '~/components/home/why-join/WhyJoinSection'
 import { campJamJsonLd } from '~/lib/site-seo'
 import { pageSeo } from '~/utils/seo'
 
@@ -43,6 +44,7 @@ function HomePage() {
     <>
       <HeroSection />
       <QuickInfoSection />
+      <WhyJoinSection />
       <CampStylesSection />
       <CampScheduleSection />
       <JamEventSection />

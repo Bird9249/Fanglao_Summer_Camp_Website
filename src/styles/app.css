@@ -1764,6 +1764,174 @@
   }
 }
 
+/* ── Why Join Us? (3 Pillars) ── */
+.why-join-section {
+  background: oklch(0.1 0.055 295);
+}
+
+.why-join-section-bg {
+  background:
+    radial-gradient(
+      ellipse 70% 50% at 15% 18%,
+      color-mix(in oklch, var(--primary) 10%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 45% at 85% 82%,
+      color-mix(in oklch, var(--chart-5) 14%, transparent),
+      transparent 60%
+    );
+}
+
+/* Staggered fade-in — cards rise one by one (hip-hop beat rhythm) */
+.why-join-card-shell {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+.why-join-grid--in .why-join-card-shell {
+  animation: why-join-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger-delay, 0s);
+}
+
+@keyframes why-join-rise {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Per-theme neon accent */
+.why-join-card--gold {
+  --pillar-glow: var(--primary);
+}
+
+.why-join-card--crimson {
+  --pillar-glow: oklch(0.62 0.24 22);
+}
+
+.why-join-card--neon-violet {
+  --pillar-glow: var(--chart-5);
+}
+
+/* 3D tilt + resting themed border */
+.why-join-card {
+  border-color: color-mix(in oklch, var(--pillar-glow) 22%, var(--border));
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform 200ms ease-out,
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+.why-join-card:hover,
+.why-join-card:focus-visible {
+  border-color: color-mix(in oklch, var(--pillar-glow) 55%, var(--border));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--pillar-glow) 30%, transparent),
+    0 14px 44px color-mix(in oklch, var(--pillar-glow) 18%, transparent);
+}
+
+.why-join-icon {
+  border-color: color-mix(in oklch, var(--pillar-glow) 35%, transparent);
+  color: var(--pillar-glow);
+}
+
+.why-join-check {
+  color: var(--pillar-glow);
+}
+
+/* Paint splash — follows pointer, glows in theme colour */
+.why-join-splash {
+  background: radial-gradient(
+    circle at var(--splash-x, 50%) var(--splash-y, 50%),
+    color-mix(in oklch, var(--pillar-glow) 55%, transparent),
+    transparent 58%
+  );
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 350ms ease;
+}
+
+.why-join-card:hover .why-join-splash,
+.why-join-card:focus-visible .why-join-splash {
+  opacity: 0.55;
+}
+
+/* Accordion bullet reveal (mobile collapsed → expanded) */
+.why-join-bullets {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why-join-bullets[data-expanded='true'] {
+  grid-template-rows: 1fr;
+}
+
+.why-join-bullets-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.why-join-bullet {
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease;
+}
+
+.why-join-bullets[data-expanded='true'] .why-join-bullet {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--bullet-i) * 70ms + 120ms);
+}
+
+/* Desktop: pillars stay fully open, no click needed */
+@media (min-width: 768px) {
+  .why-join-bullets {
+    grid-template-rows: 1fr;
+  }
+
+  .why-join-bullet {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-join-card-shell {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .why-join-card {
+    transform: none;
+    transition: none;
+  }
+
+  .why-join-splash {
+    display: none;
+  }
+
+  .why-join-bullets {
+    transition: none;
+  }
+
+  .why-join-bullet {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Leaflet + Tailwind preflight: `img { max-width: 100% }` breaks map tiles */
 .leaflet-container img {
   max-width: none !important;
