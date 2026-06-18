@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { CAMP_OPEN_DATE } from '~/lib/camp-countdown'
 
 export const CAMP_MIN_AGE = 5
-export const CAMP_MAX_AGE = 25
+export const CAMP_MAX_AGE = 35
 
 export const campStyleIds = [
   'kids',

@@ -136,7 +136,7 @@ export function JamRegisterClosed() {
             </div>
 
             <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm text-muted-foreground">
-              <li>ຊື່–ນາມສະກຸນ / ຊື່ທີມ (solo ຫຼື duo)</li>
+              <li>ຊື່–ນາມສະກຸນ / AKA / ຊື່ທີມ (solo ຫຼື duo)</li>
               <li>ເລືອກໝວດໝູ່ແຂ່ງຂັນ</li>
               <li>ຂໍ້ມູນຕິດຕໍ່</li>
             </ul>

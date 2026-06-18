@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { CampStylesSection } from '~/components/home/camp-styles/CampStylesSection'
-import { CampScheduleSection } from '~/components/home/schedule/CampScheduleSection'
 import { HeroSection } from '~/components/home/HeroSection'
-import { JamEventSection } from '~/components/home/jam/JamEventSection'
 import { QuickInfoSection } from '~/components/home/QuickInfoSection'
+import { CampStylesSection } from '~/components/home/camp-styles/CampStylesSection'
+import { JamEventSection } from '~/components/home/jam/JamEventSection'
+import { CampScheduleSection } from '~/components/home/schedule/CampScheduleSection'
 import { WhyJoinSection } from '~/components/home/why-join/WhyJoinSection'
 import { campJamJsonLd } from '~/lib/site-seo'
 import { pageSeo } from '~/utils/seo'
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_site/')({
     const { meta, links } = pageSeo({
       title: 'Fanglao Summer Dance Camp & Jam 2026',
       description:
-        'ຮຽນເຕັ້ນພັກແລ້ງ ຮຽນວັດທະນະທຳ ສະແດງອອກ — Summer Camp 29 ມິ.ຖ.–17 ກ.ກ. 2026 ແລະ Fanglao Jam 18 ກ.ກ. 2026',
+        'ຮຽນເຕັ້ນພັກແລ້ງ ຮຽນວັດທະນະທຳ ສະແດງອອກ — Summer Camp 29 ມິ.ຖ.–17 ກ.ກ. 2026 ແລະ Fanglao Jam 18 ກໍລະກົດ 2026',
       path: '/',
     })
 

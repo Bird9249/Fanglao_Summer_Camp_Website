@@ -230,6 +230,85 @@
   box-shadow: 0 0 0 1px color-mix(in oklch, var(--chart-4, #f59e0b) 35%, transparent);
 }
 
+/* ── Jam registration category selector ── */
+.jam-reg-category-card--selected {
+  background: color-mix(in oklch, var(--card) 78%, var(--primary));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--primary) 50%, transparent),
+    0 0 28px color-mix(in oklch, var(--primary) 28%, transparent);
+}
+
+.jam-reg-category-card--selected::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 0%,
+    color-mix(in oklch, var(--primary) 24%, transparent),
+    transparent 70%
+  );
+}
+
+.jam-reg-category-card--full {
+  opacity: 0.5;
+  filter: grayscale(0.9);
+}
+
+.jam-reg-format-chip--selected {
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent),
+    0 0 16px color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+.jam-reg-cloud-jam.jam-reg-category-card--selected {
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--primary) 50%, transparent),
+    0 0 28px color-mix(in oklch, var(--primary) 28%, transparent);
+}
+
+.jam-reg-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.jam-reg-step-num {
+  display: inline-flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in oklch, var(--primary) 40%, var(--border));
+  background: color-mix(in oklch, var(--primary) 12%, var(--background));
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+}
+
+.jam-reg-step--active .jam-reg-step-num {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 0 16px color-mix(in oklch, var(--primary) 35%, transparent);
+}
+
+.jam-reg-step--done .jam-reg-step-num {
+  border-color: color-mix(in oklch, var(--primary) 55%, transparent);
+  background: color-mix(in oklch, var(--primary) 22%, var(--background));
+}
+
+.jam-reg-summary {
+  border: 1px solid color-mix(in oklch, var(--primary) 35%, var(--border));
+  background: color-mix(in oklch, var(--primary) 8%, var(--card));
+  box-shadow: 0 0 24px color-mix(in oklch, var(--primary) 10%, transparent);
+}
+
 .camp-slot-badge {
   display: inline-flex;
   align-items: center;

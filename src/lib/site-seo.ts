@@ -7,7 +7,7 @@ export const siteSeoConfig = {
   siteName: 'Fanglao Studio',
   defaultTitle: 'Fanglao Summer Dance Camp & Jam 2026',
   defaultDescription:
-    'ຮຽນເຕັ້ນພັກແລ້ງ ຮຽນວັດທະນະທຳ ສະແດງອອກ — Summer Dance Camp 29 ມິ.ຖ.–17 ກ.ກ. 2026 ແລະ Fanglao Jam 18 ກ.ກ. 2026 ທີ່ວຽງຈັນ',
+    'ຮຽນເຕັ້ນພັກແລ້ງ ຮຽນວັດທະນະທຳ ສະແດງອອກ — Summer Dance Camp 29 ມິ.ຖ.–17 ກ.ກ. 2026 ແລະ Fanglao Jam 18 ກໍລະກົດ 2026 ທີ່ວຽງຈັນ',
   defaultKeywords:
     'Fanglao, dance camp, hip hop, breaking, k-pop, street dance, Laos, Vientiane, summer camp, battle',
   locale: 'lo_LA',

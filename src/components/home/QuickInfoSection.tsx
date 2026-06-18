@@ -5,6 +5,7 @@ import {
   RiTicketFill,
 } from '@remixicon/react'
 import { useInView } from '~/hooks/use-in-view'
+import { CAMP_MAX_AGE, CAMP_MIN_AGE } from '~/lib/camp-registration'
 import { CampCountdown } from './CampCountdown'
 import { QuickInfoCard } from './QuickInfoCard'
 
@@ -59,7 +60,9 @@ export function QuickInfoSection() {
             title="Target"
             className="sm:col-span-2 lg:col-span-1"
           >
-            <p className="font-semibold text-foreground">ອາຍຸ 5–35 ປີ</p>
+            <p className="font-semibold text-foreground">
+              ອາຍຸ {CAMP_MIN_AGE}–{CAMP_MAX_AGE} ປີ
+            </p>
             <p>ສຳລັບ Kids ຫາ Adults</p>
             <p>ແບ່ງກຸ່ມຕາມຄລາສ ແລະລະດັບທີ່ເໝາະສົມ</p>
           </QuickInfoCard>
